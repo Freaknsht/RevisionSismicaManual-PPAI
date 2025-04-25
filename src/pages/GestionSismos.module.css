@@ -1,0 +1,34 @@
+.gestionSismosContainer {
+    display: flex;
+    height: 500px; /* Ajusta según necesidad */
+    border: 1px solid #ccc;
+    /* margin: 20px; */
+    
+    /* Centrar verticalmente */
+    align-items: center;
+    /* Centrar horizontalmente */
+    justify-content: center;
+}
+
+.listaSismosContainer {
+    flex: 1;
+    border-right: 1px solid #ccc;
+    padding: 25px;
+    overflow-y: auto;
+    /* Centrar horizontalmente el contenido */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Centrar la lista en el contenedor */
+    align-items: center;
+}
+
+.detalleSismoContainer {
+    flex: 1;
+    padding: 10px;
+    /* Centrar contenido */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

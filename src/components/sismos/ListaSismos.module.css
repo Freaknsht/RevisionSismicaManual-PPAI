@@ -1,0 +1,15 @@
+.listaSismos {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sismoItem {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.sismoItem:hover {
+    background-color: #f0f0f0;
+}

@@ -1,0 +1,31 @@
+
+
+.botonSeleccionar {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    width: 200px;
+    height: 50px;
+}
+
+.botonSeleccionar:hover {
+    background-color: #3e8e41;
+}
+
+
+.botonSeleccionar:focus {
+    outline: none;                   /* Asegura que no haya borde en foco */
+    box-shadow: none;                /* Elimina cualquier sombra por defecto en el foco */
+    background-color: #2d572f;
+}
+
+
+.divPaginaPrincipal{
+    background-color: gray;
+}

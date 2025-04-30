@@ -1,20 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React, { useState } from 'react';
+import PaginaPrincipal from './pages/PaginaPrincipal';
 import GestionSismos from './pages/GestionSismos';
 import './index.css';
-import './App.css'; // Estilos para App.jsx
+import './App.css';
 
 function App() {
+  const [mostrarGestion, setMostrarGestion] = useState(false);
+
   return (
     <React.StrictMode>
       <div id="main-container">
-        <GestionSismos />
+        {mostrarGestion ? (
+          <GestionSismos />
+        ) : (
+          <PaginaPrincipal onRegistrarClick={() => setMostrarGestion(true)} />
+        )}
       </div>
     </React.StrictMode>
   );
 }
 
-export default App; // Esta línea es crucial
+export default App;
 
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);

@@ -22,7 +22,7 @@ const GestionSismos = () => {
             areaSismo: 'Córdoba',
             areaAfectada: 'Carlos Paz',
             fechaDeteccion: '2024-07-26',
-            horaDeteccion: '10:00:00'
+            horaDeteccion: '10:06:00'
         },
         {
             id: 2,
@@ -33,7 +33,7 @@ const GestionSismos = () => {
             areaSismo: 'San Juan',
             areaAfectada: 'Mendoza',
             fechaDeteccion: '2024-07-26',
-            horaDeteccion: '12:30:00'
+            horaDeteccion: '19:33:00'
         },
         // ... más sismos
         ];

@@ -13,7 +13,8 @@ const DetalleSismo = ({ sismo, onIniciarRevision }) => {
             <p>Clasificación: {sismo.clasificacion}</p>
             <p>Área del Sismo: {sismo.areaSismo}</p>
             <p>Área Afectada: {sismo.areaAfectada}</p>
-            <p>Fecha y Hora de Detección: {sismo.fechaDeteccion}</p>
+            <p>Fecha de Detección: {sismo.fechaDeteccion}</p>
+            <p>Hora de Detección: {sismo.horaDeteccion}</p>
             <button onClick={onIniciarRevision} className={styles.revisionButton}>
                 Iniciar Revisión Manual
             </button>

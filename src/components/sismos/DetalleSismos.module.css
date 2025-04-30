@@ -13,3 +13,9 @@
 .revisionButton:hover {
     background-color: #3e8e41;
 }
+
+.revisionButton:focus {
+    outline: none;                   /* Asegura que no haya borde en foco */
+    box-shadow: none;                /* Elimina cualquier sombra por defecto en el foco */
+    background-color: #2d572f;
+}

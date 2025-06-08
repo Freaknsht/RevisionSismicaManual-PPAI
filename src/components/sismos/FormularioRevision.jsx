@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styles from './FormularioRevision.module.css'; // Importa los estilos
 
-const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) => {
+const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) => { // onGuardarRevision
     const [resultado, setResultado] = useState('');
     const [observaciones, setObservaciones] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onGuardarRevision({
+        onGuardarRevision({ // onGuardarRevision
         sismoId: sismo.id,
         resultado,
         observaciones,
@@ -20,7 +20,7 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
         <form onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
             <label>Resultado de la Revisión:</label>
-            <select className={styles.selecciones} value={resultado} onChange={(e) => setResultado(e.target.value)}>
+            <select value={resultado} onChange={(e) => setResultado(e.target.value)}>
                 <option value="">Seleccionar</option>
                 <option value="aprobado">Aprobado</option>
                 <option value="rechazado">Rechazado</option>
@@ -29,7 +29,7 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
             </div>
             <div className={styles.formGroup}>
             <label>Observaciones:</label>
-            <input value={observaciones} className={styles.campoTexto}  onChange={(e) => setObservaciones(e.target.value)} />
+            <textarea value={observaciones} onChange={(e) => setObservaciones(e.target.value)} />
             </div>
             <div>
             <button type="submit" className={styles.saveButton}>

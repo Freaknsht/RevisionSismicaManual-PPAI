@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styles from './FormularioRevision.module.css'; // Importa los estilos
 
-const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) => {
+const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) => { // onGuardarRevision
     const [resultado, setResultado] = useState('');
     const [observaciones, setObservaciones] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onGuardarRevision({
+        onGuardarRevision({ // onGuardarRevision
         sismoId: sismo.id,
         resultado,
         observaciones,

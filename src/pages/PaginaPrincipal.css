@@ -1,0 +1,53 @@
+
+
+.paginaP{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    height: 320px;
+    width: 250px;
+    border: 2px solid black;
+    
+    
+}
+
+
+
+.botonSeleccionar {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    width: 200px;
+    height: 50px;
+    margin-top:40px;
+    
+}
+
+.botonSeleccionar:hover {
+    background-color: #3e8e41;
+}
+
+
+.botonSeleccionar:focus {
+    outline: none;                   /* Asegura que no haya borde en foco */
+    box-shadow: none;                /* Elimina cualquier sombra por defecto en el foco */
+    background-color: #2d572f;
+}
+
+
+.divPaginaPrincipal{
+    background-color: gray;
+}
+
+.redsismicaimagen{
+    width: 100px;
+    border: 1px solid black;
+}

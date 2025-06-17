@@ -11,6 +11,11 @@
   align-items: center;    /* Centrar verticalmente */
   /* height: 100vh;          /* 100% de la altura de la ventana */
   /* width: 100vw;           /* 100% del ancho de la ventana */
+  background-color: white;
+}
+
+body{
+  background-color: rgb(241, 236, 236);
 }
 
 .logo {

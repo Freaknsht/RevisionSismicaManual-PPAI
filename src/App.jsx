@@ -1,20 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React, { useState } from 'react';
+import Sesion from './sesion.jsx';
+import PaginaPrincipal from './pages/PaginaPrincipal';
 import GestionSismos from './pages/GestionSismos';
 import './index.css';
-import './App.css'; // Estilos para App.jsx
+import './App.css';
 
 function App() {
+  const [paginaActual, setPaginaActual] = useState('sesion');
+  const [user, setUser] = useState('')
+
   return (
-    <React.StrictMode>
-      <div id="main-container">
+    <div id="main-container">
+      {paginaActual === 'sesion' && (
+        <Sesion onIniciarSesion={() => setPaginaActual('principal')} setUser={setUser} />
+      )}
+      {paginaActual === 'principal' && (
+        <PaginaPrincipal onIrAGestion={() => setPaginaActual('gestion')}  user={user}/>
+      )}
+      {paginaActual === 'gestion' && (
         <GestionSismos />
-      </div>
-    </React.StrictMode>
+      )}
+    </div>
   );
 }
 
-export default App; // Esta línea es crucial
-
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+export default App;

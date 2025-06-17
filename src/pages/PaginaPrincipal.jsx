@@ -1,14 +1,17 @@
 import './PaginaPrincipal.css';
 
-//primer componente que renderiza la aplicacion
 
-
-function PaginaPrincipal({ onRegistrarClick }) {
-    return (
-      <button className="botonSeleccionar" onClick={onRegistrarClick}>
+function PaginaPrincipal({ user, onIrAGestion }) {
+  const Usuario = user;
+  return (
+    <div className='paginaP'>
+      <h3>Bienvenido: {Usuario}</h3>
+      <img className="redsismicaimagen" src="../../redsismica.png" alt="" />
+      <button className="botonSeleccionar" onClick={onIrAGestion}>
         Registrar revisión manual
       </button>
-    );
-  }
-  
-  export default PaginaPrincipal;
+    </div>
+  );
+}
+
+export default PaginaPrincipal;

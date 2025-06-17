@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
+import Sesion from './sesion.jsx';
 import PaginaPrincipal from './pages/PaginaPrincipal';
 import GestionSismos from './pages/GestionSismos';
 import './index.css';
 import './App.css';
 
 function App() {
-  const [mostrarGestion, setMostrarGestion] = useState(false);
+  const [paginaActual, setPaginaActual] = useState('sesion');
+  const [user, setUser] = useState('')
 
   return (
-    <React.StrictMode>
-      <div id="main-container">
-        {mostrarGestion ? (
-          <GestionSismos />
-        ) : (
-          <PaginaPrincipal onRegistrarClick={() => setMostrarGestion(true)} />
-        )}
-      </div>
-    </React.StrictMode>
+    <div id="main-container">
+      {paginaActual === 'sesion' && (
+        <Sesion onIniciarSesion={() => setPaginaActual('principal')} setUser={setUser} />
+      )}
+      {paginaActual === 'principal' && (
+        <PaginaPrincipal onIrAGestion={() => setPaginaActual('gestion')}  user={user}/>
+      )}
+      {paginaActual === 'gestion' && (
+        <GestionSismos />
+      )}
+    </div>
   );
 }
 
 export default App;
-

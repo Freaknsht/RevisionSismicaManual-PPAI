@@ -16,7 +16,7 @@ const GestionSismos = () => {
         switch (estado) {
             case 'Autodetectado':
                 return styles.estadoAutodetectado;
-            case 'Pendiente Revisión':
+            case 'Pendiente de Revisión':
                 return styles.estadoPendiente;
             case 'Evento sin Revisión':
                 return styles.estadoSinRevision;

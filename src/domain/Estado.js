@@ -34,6 +34,15 @@ class Estado {
         }
         return this;
     }
+
+    esAmbitoEventoSismico(evento) {
+        // Si tu modelo no tiene historial de estados, asumimos que sí
+        return true; // porque este estado ya es parte del evento
+    }
+    
+    esBloqueadoEnRevision() {
+        return this === Estado.BLOQUEADO_EN_REVISION;
+    }
 }
 
 export default Estado; 

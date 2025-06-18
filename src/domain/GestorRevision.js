@@ -60,6 +60,12 @@ const GestorRevision = {
     cancelarRevision: () => {
         // Lógica para cancelar (por ahora no hay nada específico)
         return { success: true, message: "Revisión cancelada" };
+    },
+
+    buscarEstadoBloqueadoEnRevision: (evento) => {
+        // Verifica si el evento está en estado bloqueado en revisión
+        const estado = evento.getEstado();
+        return estado.esAmbitoEventoSismico(evento) && estado.esBloqueadoEnRevision();
     }
 };
 

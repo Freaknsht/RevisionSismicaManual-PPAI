@@ -124,6 +124,11 @@ class EventoSismico {
     getHoraDeteccion() {
         return this.horaDeteccion;
     }
+
+    esAutodetectado() {
+        return this.estado.getNombre() === 'Autodetectado';
+    }
+    
 }
 
 export default EventoSismico; 

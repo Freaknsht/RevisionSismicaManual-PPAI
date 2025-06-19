@@ -47,7 +47,7 @@ const GestionSismos = () => {
                 clearInterval(intervalId);
             }
         };
-    }, [sismoSeleccionado, estadoActual]);
+    }, [sismoSeleccionado]);
 
     // Simulación de carga de datos desde el backend
     //llama a GestorRevision.buscarSismos() para cargar los sismos
@@ -74,8 +74,8 @@ const GestionSismos = () => {
 
     // Llama a GestorRevision.tomarDatosRevision()
     const handleIniciarRevision = () => {
-        const sismoParaRevision = GestorRevision.tomarDatosRevision(sismoSeleccionado);
-        setSismoSeleccionado(sismoParaRevision); // Actualizar si es necesario
+        //const sismoParaRevision = GestorRevision.tomarDatosRevision(sismoSeleccionado);
+        //setSismoSeleccionado(sismoParaRevision); // Actualizar si es necesario
         setModoRevision(true);
     };
 
@@ -118,7 +118,7 @@ const GestionSismos = () => {
             {sismoSeleccionado && ( // Mostrar solo si hay un sismo seleccionado
                 <div className={styles.detalleSismoContainer}>
                     <div className={`${styles.estadoContainer} ${getEstadoClass(estadoActual)}`}>
-                        <h3>Estado actual: {estadoActual}</h3>
+                      <h3>Estado actual: {estadoActual}</h3>
                     </div>
                     {!modoRevision ? (
                         <DetalleSismo 

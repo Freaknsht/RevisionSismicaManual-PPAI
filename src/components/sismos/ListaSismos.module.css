@@ -13,3 +13,16 @@
 .sismoItem:hover {
     background-color: #f0f0f0;
 }
+
+.botonVisualizarMapa{
+    margin-top: 100px;
+    background-color: #4CAF50;
+    width: 200px;
+    height:40px;
+    border: none;
+    
+}
+
+.botonVisualizarMapa:hover{
+    background-color:#338e36;;
+}

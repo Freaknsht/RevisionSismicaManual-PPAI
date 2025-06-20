@@ -110,10 +110,19 @@ const GestionSismos = () => {
         setModoRevision(false);
     };
 
+
+    const handleVisualizarMapa = () => {
+        // Por ahora podés poner un alert o un console.log
+        alert('Mostrar mapa con ubicación del sismo seleccionado');
+    };
+      
+
     return (
         <div className={styles.gestionSismosContainer}>
             <div className={styles.listaSismosContainer}>
-                <ListaSismos sismos={sismos} onSeleccionarSismo={handleSeleccionarSismo} />
+                <ListaSismos sismos={sismos} onSeleccionarSismo={handleSeleccionarSismo} modoRevision={modoRevision}
+                onVisualizarMapa={handleVisualizarMapa}
+                />
             </div>
             {sismoSeleccionado && ( // Mostrar solo si hay un sismo seleccionado
                 <div className={styles.detalleSismoContainer}>

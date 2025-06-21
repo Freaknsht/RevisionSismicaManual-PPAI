@@ -116,11 +116,24 @@ const GestionSismos = () => {
         setModoRevision(false);
     };
 
+
+    const handleVisualizarMapa = () => {
+        // Por ahora podés poner un alert o un console.log
+        alert('Mostrar mapa con ubicación del sismo seleccionado');
+    };
+
+    const handleModificarDatos = () => {
+        alert("Aquí iría la lógica para abrir el formulario de modificación de datos.");
+    };
+      
+
     return (
         <div className={styles.gestionSismosContainer}>
         {!modoRevision && (
             <div className={styles.listaSismosContainer}>
-                <ListaSismos sismos={sismos} onSeleccionarSismo={handleSeleccionarSismo} />
+                <ListaSismos sismos={sismos} onSeleccionarSismo={handleSeleccionarSismo} modoRevision={modoRevision}
+                onVisualizarMapa={handleVisualizarMapa} onModificarDatos={handleModificarDatos}
+                />
             </div>
         )}
         {sismoSeleccionado && (

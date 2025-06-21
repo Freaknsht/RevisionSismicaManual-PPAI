@@ -14,15 +14,38 @@
     background-color: #f0f0f0;
 }
 
-.botonVisualizarMapa{
+/* Botones al final de la lista */
+.botonesContainer {
+    display: flex;
+    gap: 10px;
     margin-top: 100px;
-    background-color: #4CAF50;
-    width: 200px;
-    height:40px;
-    border: none;
-    
 }
 
-.botonVisualizarMapa:hover{
-    background-color:#338e36;;
+/* Visualizar en un mapa */
+.botonVisualizarMapa {
+    background-color: #4CAF50;
+    width: 200px;
+    height: 50px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.botonVisualizarMapa:hover {
+    background-color: #338e36;
+}
+
+/*Modificar datos */
+.botonModificarDatos {
+    background-color: #2196F3;
+    color: #fff;
+    padding: 0 12px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.botonModificarDatos:hover {
+    background-color: #1976D2;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ListaSismos.module.css'; // Importa los estilos
 
-const ListaSismos = ({ sismos, onSeleccionarSismo, modoRevision, onVisualizarMapa }) => {
+const ListaSismos = ({ sismos, onSeleccionarSismo, modoRevision, onVisualizarMapa, onModificarDatos }) => {
     return (
       <div>
         <h2>Lista de Sismos Detectados</h2>
@@ -18,9 +18,16 @@ const ListaSismos = ({ sismos, onSeleccionarSismo, modoRevision, onVisualizarMap
         </ul>
   
         {modoRevision && (
-          <button className={styles.botonVisualizarMapa} onClick={onVisualizarMapa}>
-            Visualizar en un mapa
-          </button>
+           <div className={styles.botonesContainer}>
+           <button className={styles.botonVisualizarMapa} onClick={onVisualizarMapa}>
+             Visualizar en mapa
+           </button>
+           
+           <button className={styles.botonModificarDatos} onClick={onModificarDatos}>
+             Modificar datos
+           </button>
+         </div>
+
         )}
       </div>
     );

@@ -18,15 +18,15 @@ const ListaSismos = ({ sismos, onSeleccionarSismo, modoRevision, onVisualizarMap
         </ul>
   
         {modoRevision && (
-           <div className={styles.botonesContainer}>
-           <button className={styles.botonVisualizarMapa} onClick={onVisualizarMapa}>
-             Visualizar en mapa
-           </button>
-           
-           <button className={styles.botonModificarDatos} onClick={onModificarDatos}>
-             Modificar datos
-           </button>
-         </div>
+            <div className={styles.botonesContainer}>
+            <button className={styles.botonVisualizarMapa} onClick={onVisualizarMapa}>
+              Visualizar en mapa
+            </button>
+            
+            <button className={styles.botonModificarDatos} onClick={onModificarDatos}>
+              Modificar datos
+            </button>
+          </div>
 
         )}
       </div>

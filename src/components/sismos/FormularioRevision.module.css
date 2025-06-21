@@ -17,7 +17,7 @@
     display: inline-block;
     font-size: 14px;
     cursor: pointer;
-    margin-right: 10px;
+    
 }
 
 .saveButton:hover {
@@ -44,6 +44,7 @@
     display: inline-block;
     font-size: 14px;
     cursor: pointer;
+    margin-right: 10px;
 }
 
 .cancelButton:hover {
@@ -67,4 +68,91 @@
 .selecciones{
     background-color: rgb(246, 245, 245);
     color: black;
+}
+
+.fullGrid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+}
+
+.topSection {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%;
+}
+
+.infoBox {
+    flex: 1;
+    background: #f7f7f7;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.mapBox {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eaeaea;
+    border-radius: 8px;
+    min-height: 200px;
+    min-width: 300px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+}
+
+.mapImage {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 8px;
+    transition: transform 0.3s, filter 0.3s;
+}
+
+.mapBox:hover .mapImage {
+    transform: scale(1.15);
+    filter: blur(3px) brightness(0.8);
+}
+
+.revisarMapaBtn {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    opacity: 0.9;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.mapBox:hover .revisarMapaBtn {
+    display: block;
+}
+
+.bottomSection {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 1rem;
 }

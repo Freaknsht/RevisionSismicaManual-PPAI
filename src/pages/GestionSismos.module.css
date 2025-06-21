@@ -33,11 +33,16 @@
 }
 
 .estadoContainer {
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    padding: 1.5rem 2rem;
+    margin: 0 auto 1rem auto;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    max-width: 480px;
+    min-width: 260px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .estadoAutodetectado {
@@ -55,11 +60,17 @@
     color: #721c24;
 }
 
+.estadoBloqueadoEnRevision {
+    background-color: #9bd9ee;
+    color: #004585;
+}
+
 .estadoContainer h3 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
     white-space: nowrap;
+    text-align: center;
 }
 
 .botonDeshabilitado {

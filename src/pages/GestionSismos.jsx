@@ -20,6 +20,8 @@ const GestionSismos = () => {
                 return styles.estadoPendiente;
             case 'Evento sin Revisión':
                 return styles.estadoSinRevision;
+            case 'Bloqueado en Revisión':
+                    return styles.estadoBloqueadoEnRevision;
             default:
                 return '';
         }
@@ -74,9 +76,13 @@ const GestionSismos = () => {
 
     // Llama a GestorRevision.tomarDatosRevision()
     const handleIniciarRevision = () => {
-        //const sismoParaRevision = GestorRevision.tomarDatosRevision(sismoSeleccionado);
-        //setSismoSeleccionado(sismoParaRevision); // Actualizar si es necesario
+        const pudoBloquear = GestorRevision.buscarEstadoBloqueadoEnRevision(sismoSeleccionado);
+    if (pudoBloquear) {
+        setEstadoActual("Bloqueado en Revisión");
         setModoRevision(true);
+    } else {
+        alert("No se puede iniciar la revisión en el estado actual.");
+    }
     };
 
     /*
@@ -112,31 +118,33 @@ const GestionSismos = () => {
 
     return (
         <div className={styles.gestionSismosContainer}>
+        {!modoRevision && (
             <div className={styles.listaSismosContainer}>
                 <ListaSismos sismos={sismos} onSeleccionarSismo={handleSeleccionarSismo} />
             </div>
-            {sismoSeleccionado && ( // Mostrar solo si hay un sismo seleccionado
-                <div className={styles.detalleSismoContainer}>
-                    <div className={`${styles.estadoContainer} ${getEstadoClass(estadoActual)}`}>
-                      <h3>Estado actual: {estadoActual}</h3>
-                    </div>
-                    {!modoRevision ? (
-                        <DetalleSismo 
-                            sismo={sismoSeleccionado} 
-                            onIniciarRevision={handleIniciarRevision}
-                            botonDeshabilitado={estadoActual === 'Evento sin Revisión'}
-                            estiloBoton={estadoActual === 'Evento sin Revisión' ? styles.botonDeshabilitado : ''}
-                        />
-                    ) : (
-                        <FormularioRevision
-                            sismo={sismoSeleccionado}
-                            onGuardarRevision={handleRegistrarResultado}
-                            onCancelarRevision={handleCancelarRevision}
-                        />
-                    )}
+        )}
+        {sismoSeleccionado && (
+            <div className={styles.detalleSismoContainer} style={modoRevision ? { width: '100%' } : {}}>
+                <div className={`${styles.estadoContainer} ${getEstadoClass(estadoActual)}`}>
+                    <h3>Estado actual: {estadoActual}</h3>
                 </div>
-            )}
-        </div>
+                {!modoRevision ? (
+                    <DetalleSismo 
+                        sismo={sismoSeleccionado} 
+                        onIniciarRevision={handleIniciarRevision}
+                        botonDeshabilitado={estadoActual === 'Evento sin Revisión'}
+                        estiloBoton={estadoActual === 'Evento sin Revisión' ? styles.botonDeshabilitado : ''}
+                    />
+                ) : (
+                    <FormularioRevision
+                        sismo={sismoSeleccionado}
+                        onGuardarRevision={handleRegistrarResultado}
+                        onCancelarRevision={handleCancelarRevision}
+                    />
+                )}
+            </div>
+        )}
+    </div>
     );
 };
 

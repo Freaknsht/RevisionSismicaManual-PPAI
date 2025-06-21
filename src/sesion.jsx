@@ -8,9 +8,12 @@ function Sesion({ onIniciarSesion, setUser }) {
       <input type="text" placeholder='Usuario' onChange={(e) => setUser(e.target.value)}/>
       <input type="password" placeholder='Contraseña'/>
       
-      <button className="botonSeleccionar" onClick={onIniciarSesion}>
-        Iniciar sesión
-      </button>
+      <button className="botonSeleccionar" onClick={() => {
+    onIniciarSesion();
+    localStorage.setItem('usuarioLogueado', document.querySelector('input[placeholder="Usuario"]').value);
+}}>
+    Iniciar sesión
+</button>
       <p className='olvidaste-tu-contraseña'>¿Olvidaste tu contraseña?</p>
     </div>
   );

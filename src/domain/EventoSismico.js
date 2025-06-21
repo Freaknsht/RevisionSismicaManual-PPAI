@@ -1,4 +1,5 @@
 import Estado from './Estado';
+import CambioEstado from './CambioEstado';
 
 class EventoSismico {
     constructor(id, fechaHora, latitudEp, longitudEp, latitudHip, longitudHip, magnitud, origen, alcance, clasificacion, areaSismo, areaAfectada) {
@@ -20,8 +21,12 @@ class EventoSismico {
         this.fechaDeteccion = fechaActual.toLocaleDateString();
         this.horaDeteccion = fechaActual.toLocaleTimeString();
         
+        this.cambiosEstado = [];
         // Inicializar estado según magnitud
         this.estado = magnitud < 4 ? Estado.AUTODETECTADO : null;
+        if (this.estado) {
+            this.registrarCambioEstado(this.estado);
+        }
         
         // Iniciar temporizadores si es autodetectado
         if (this.estado === Estado.AUTODETECTADO) {
@@ -56,10 +61,26 @@ class EventoSismico {
         }
     }
 
+    registrarCambioEstado(nuevoEstado) {
+        const ahora = new Date();
+        // Cierra el último cambio si existe
+        if (this.cambiosEstado.length > 0) {
+            this.cambiosEstado[this.cambiosEstado.length - 1].cerrarCambio(ahora);
+        }
+        // Agrega el nuevo cambio de estado
+        this.cambiosEstado.push(new CambioEstado(nuevoEstado, ahora));
+        this.estado = nuevoEstado;
+    }
+
+    buscarUltimoCambioEstado() {
+        if (this.cambiosEstado.length === 0) return null;
+        return this.cambiosEstado[this.cambiosEstado.length - 1];
+    }
+
     iniciarRevision() {
         if (this.estado.puedeIniciarRevision()) {
-            this.limpiarTemporizadores(); // Detener los temporizadores
-            this.estado = this.estado.iniciarRevision();
+            this.limpiarTemporizadores();
+            this.registrarCambioEstado(Estado.BLOQUEADO_EN_REVISION);
             return true;
         }
         return false;
@@ -131,4 +152,4 @@ class EventoSismico {
     
 }
 
-export default EventoSismico; 
+export default EventoSismico;

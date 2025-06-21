@@ -1,4 +1,5 @@
 import { obtenerSismos, guardarRevisionSismo } from '../services/sismoService'; // Simula llamadas al backend (luego lo reemplazaremos)
+import Estado from './Estado';
 
 const GestorRevision = {
     //Simula la obtención de sismos desde un servicio
@@ -31,6 +32,7 @@ const GestorRevision = {
                 latitudHip: sismo.getLatitudHip(),
                 longitudHip: sismo.getLongitudHip(),
                 magnitud: sismo.getMagnitud(),
+                //De aca para abajo no deberia estar(? o no en este llamado
                 origen: sismo.getOrigen(),
                 alcance: sismo.getAlcance(),
                 clasificacion: sismo.getClasificacion(),
@@ -63,10 +65,33 @@ const GestorRevision = {
     },
 
     buscarEstadoBloqueadoEnRevision: (evento) => {
-        // Verifica si el evento está en estado bloqueado en revisión
-        const estado = evento.getEstado();
-        return estado.esAmbitoEventoSismico(evento) && estado.esBloqueadoEnRevision();
+        // Obtener el estado actual del evento
+    const estadoActual = evento.getEstado();
+
+    // Verificar si el estado actual es Autodetectado o Pendiente de Revisión
+    const nombreEstado = estadoActual.getNombre();
+    if (nombreEstado === 'Autodetectado' || nombreEstado === 'Pendiente de Revisión') {
+        // Si está en uno de estos estados, verificar si puede iniciar revisión
+        if (estadoActual.puedeIniciarRevision()) {
+            // Cambia el estado del evento
+            evento.iniciarRevision();
+            return true;
+        }
     }
+    return false;
+    },
+
+    buscarEmpleadoLogueado: () => {
+        return localStorage.getItem('usuarioLogueado') || null;
+    },
+
+    bloquearEvento: (evento) => {
+        const ultimoCambio = evento.buscarUltimoCambioEstado();
+        if (ultimoCambio) {
+            ultimoCambio.cerrarCambio(new Date());
+        }
+        evento.registrarCambioEstado(Estado.BLOQUEADO_EN_REVISION);
+    },
 };
 
 export default GestorRevision;

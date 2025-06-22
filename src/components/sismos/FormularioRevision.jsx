@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './FormularioRevision.module.css'; // Importa los estilos
+import mapaZona from '../../picture/mapa-zona.jpg';
 
 const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) => { // onGuardarRevision
     const [resultado, setResultado] = useState('');
@@ -32,7 +33,7 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
                 <p><b>Hora:</b> {sismo.getHoraDeteccion()}</p>
             </div>
             <div className={styles.mapBox}>
-                <img src="/../../picture/mapa-zona.jpg" alt="Mapa" className={styles.mapImage} />
+                <img src={mapaZona} alt="Mapa" className={styles.mapImage} />
                 <button type="button" className={styles.revisarMapaBtn}>Revisar Mapa</button>
             </div>
         </div>

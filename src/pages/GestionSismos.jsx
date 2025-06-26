@@ -4,12 +4,14 @@ import DetalleSismo from '../components/sismos/DetalleSismos';
 import FormularioRevision from '../components/sismos/FormularioRevision';
 import styles from './GestionSismos.module.css'; // Importa los estilos
 import GestorRevision from '../domain/GestorRevision'; // Importa el Gestor
+import Notificacion from '../components/sismos/Notificacion';
 
 const GestionSismos = () => {
     const [sismos, setSismos] = useState([]);
     const [sismoSeleccionado, setSismoSeleccionado] = useState(null);
     const [modoRevision, setModoRevision] = useState(false);
     const [estadoActual, setEstadoActual] = useState(null);
+    const [notificacion, setNotificacion] = useState(null);
 
     // Función para obtener la clase de estilo según el estado
     const getEstadoClass = (estado) => {
@@ -80,6 +82,7 @@ const GestionSismos = () => {
     if (pudoBloquear) {
         setEstadoActual("Bloqueado en Revisión");
         setModoRevision(true);
+        setNotificacion("El evento ha sido bloqueado para los demas analistas");
     } else {
         alert("No se puede iniciar la revisión en el estado actual.");
     }
@@ -154,6 +157,14 @@ const GestionSismos = () => {
                         onGuardarRevision={handleRegistrarResultado}
                         onCancelarRevision={handleCancelarRevision}
                     />
+                )}
+
+                {notificacion && (
+                        <Notificacion 
+                             message={notificacion} 
+                             onClose={() => setNotificacion(null)} 
+                             duration={4000} // dura 4 segundos
+                        />
                 )}
             </div>
         )}

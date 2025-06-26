@@ -49,9 +49,9 @@ class EventoSismico {
                         this.estado = this.estado.siguienteEstado();
                         console.log(`Sismo ${this.id} cambió a estado: ${this.estado.getNombre()}`);
                     }
-                }, 5 * 60 * 1000); // 5 minutos
+                }, 15 * 1000); // 15 segundos
             }
-        }, 5 * 60 * 1000); // 5 minutos
+        }, 30 * 1000); // 30 segundos
     }
 
     limpiarTemporizadores() {
@@ -86,6 +86,21 @@ class EventoSismico {
             return true;
         }
         return false;
+    }
+
+    cancelarRevision() {
+        const ultimoCambio = this.buscarUltimoCambioEstado();
+        if (ultimoCambio && this.estado.esBloqueadoEnRevision()) {
+            // Cerramos el registro actual de BLOQUEADO_EN_REVISION
+            ultimoCambio.cerrarCambio(new Date());
+    
+            // El penúltimo registro tiene el estado al que debemos regresar
+            const anteriorCambio = this.cambiosEstado[this.cambiosEstado.length - 2];
+            if (anteriorCambio) {
+                this.estado = anteriorCambio.getEstado();
+                this.registrarCambioEstado(this.estado);
+            }
+        }
     }
 
     puedeIniciarRevision() {

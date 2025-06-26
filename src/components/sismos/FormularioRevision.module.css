@@ -1,10 +1,13 @@
 
 .formularioRevisionContainer {
-   padding: 15px 30px;
+   padding: 15px 50px;
+   
+
     
 }
 
 .formGroup {
+    margin-top:5px;
     margin-bottom: 10px;
 }
 
@@ -161,4 +164,33 @@
 .buttonGroup {
     display: flex;
     gap: 1rem;
+    
+}
+
+.textInput,
+.selectInput {
+    padding: 0.5rem;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    width: 100%;              /* Ocupa todo el ancho del contenedor */
+    box-sizing: border-box;
+    background-color: white;
+    color: black;
+}
+
+.textInput{
+    cursor: text;
+}
+
+
+.textInput:focus,
+.selectInput:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0px 0px 3px rgba(0, 123, 255, 0.5);
+    background-color: white;
+    color: black;
+
 }

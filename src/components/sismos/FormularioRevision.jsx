@@ -14,6 +14,13 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
         observaciones,
         });
     };
+    const handleCancelarRevision = () => {
+        sismo.cancelarRevision();
+        // vuelve al estado anterior
+        setSismos((prevSismos) =>
+          prevSismos.map((s) => (s.id === sismo.id ? { ...s } : s))
+        );
+    };
 
     return (
 
@@ -42,21 +49,41 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
             <form onSubmit={handleSubmit} className={styles.bottomSection}>
                 <div className={styles.formGroup}>
                     <label>Descripción / Observaciones:</label>
-                    <textarea value={observaciones} onChange={(e) => setObservaciones(e.target.value)} />
+                    <textarea
+                        className={styles.textInput}
+                        value={observaciones}
+                        onChange={(e) => setObservaciones(e.target.value)}
+                    />
                 </div>
                 <div className={styles.formGroup}>
                     <label>Resultado de la Revisión:</label>
-                    <select value={resultado} onChange={(e) => setResultado(e.target.value)}>
-                        <option value="">Seleccionar</option>
-                        <option value="aprobado">Aprobado</option>
-                        <option value="rechazado">Rechazado</option>
-                        <option value="derivado">Derivado</option>
+                    <select
+                        className={styles.selectInput}
+                        value={resultado}
+                        onChange={(e) => setResultado(e.target.value)}
+                    >
+                        <option value="" disabled style={{ color: '#777' }}>
+                            Seleccionar
+                        </option>
+                        <option value="aprobado">Confirmar</option>
+                        <option value="rechazado">Rechazar</option>
+                        <option value="derivado">Derivar</option>
                     </select>
                 </div>
                 <div className={styles.buttonGroup}>
-                    <button type="button" onClick={onCancelarRevision} className={styles.cancelButton}>Cancelar</button>
-                    <button type="submit" className={styles.saveButton}>Guardar Revisión</button>
-                    
+                    <button
+                        type="button"
+                        onClick={()=> {onCancelarRevision(), handleCancelarRevision()}}
+                        className={styles.cancelButton}
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="submit"
+                        className={styles.saveButton}
+                    >
+                        Guardar Revisión
+                    </button>
                 </div>
             </form>
            </div>

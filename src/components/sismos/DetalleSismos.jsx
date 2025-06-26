@@ -16,6 +16,7 @@ const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoto
                 onClick={onIniciarRevision}
                 disabled={botonDeshabilitado}
                 className={estiloBoton}
+              
             >
                 Iniciar Revisión Manual
             </button>

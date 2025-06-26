@@ -33,8 +33,8 @@
 }
 
 .estadoContainer {
-    padding: 1.5rem 2rem;
-    margin: 0 auto 1rem auto;
+    padding: 0.75rem 2rem;
+    margin: -0.8rem auto 1rem auto;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     max-width: 480px;
@@ -48,20 +48,24 @@
 .estadoAutodetectado {
     background-color: #d4edda;
     color: #155724;
+    border:1px solid rgb(9, 73, 1);
 }
 
 .estadoPendiente {
     background-color: #fff3cd;
     color: #a37b04;
+    border:1px solid rgb(201, 211, 7);
 }
 
 .estadoSinRevision {
     background-color: #f8d7da;
     color: #721c24;
+    border:1px solid rgb(177, 10, 10);
 }
 
 .estadoBloqueadoEnRevision {
     background-color: #9bd9ee;
+    border: 1px solid rgb(11, 1, 97);
     color: #004585;
 }
 

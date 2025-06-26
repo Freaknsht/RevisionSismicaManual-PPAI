@@ -1,15 +1,21 @@
 import EventoSismico from '../domain/EventoSismico';
 
+// Definimos dos fechas para los sismos
+const fechaReciente = new Date(); // Ahora
+const fechaVieja = new Date();
+fechaVieja.setDate(fechaVieja.getDate() - 1); // Ayer
+fechaVieja.setHours(9, 15);
+
 // Simulamos una base de datos de sismos
 const sismosMock = [
     new EventoSismico(
         1,
-        new Date('2024-03-10T10:30:00'),
+        fechaReciente,            // Ahora
         -31.4201,
         -64.1888,
         -31.4,
         -64.2,
-        3.5, // Magnitud menor a 4 (será autodetectado)
+        3.5,
         "Natural",
         "Local",
         "Superficial",
@@ -18,12 +24,12 @@ const sismosMock = [
     ),
     new EventoSismico(
         2,
-        new Date('2024-03-11T15:45:00'),
+        fechaVieja,              // Ayer
         -32.8566,
         -68.8839,
         -32.9,
         -68.9,
-        3.8, // Magnitud menor a 4 (será autodetectado)
+        3.8,
         "Tectónico",
         "Regional",
         "Intermedio",

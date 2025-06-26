@@ -18,8 +18,10 @@ class EventoSismico {
         
         // Separar fecha y hora de detección
         const fechaActual = new Date();
-        this.fechaDeteccion = fechaActual.toLocaleDateString();
-        this.horaDeteccion = fechaActual.toLocaleTimeString();
+        // Después
+        this.fechaDeteccion = fechaHora.toLocaleDateString();
+        this.horaDeteccion = fechaHora.toLocaleTimeString();
+
         
         this.cambiosEstado = [];
         // Inicializar estado según magnitud

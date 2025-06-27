@@ -67,7 +67,6 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
                         </option>
                         <option value="aprobado">Confirmar</option>
                         <option value="rechazado">Rechazar</option>
-                        <option value="derivado">Derivar</option>
                     </select>
                 </div>
                 <div className={styles.buttonGroup}>
@@ -83,6 +82,12 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
                         className={styles.saveButton}
                     >
                         Guardar Revisión
+                    </button>
+                    <button
+                        type="submit"
+                        className={styles.DerivarButton}
+                    >
+                        Derivar a supervisor
                     </button>
                 </div>
             </form>

@@ -15,6 +15,10 @@ class EventoSismico {
         this.clasificacion = clasificacion;
         this.areaSismo = areaSismo;
         this.areaAfectada = areaAfectada;
+        this.fechaHoraRechazo = null;
+
+      
+        
         
         // Separar fecha y hora de detección
         const fechaActual = new Date();
@@ -36,6 +40,13 @@ class EventoSismico {
         }
     }
 
+    setFechaHoraRechazo(fecha) {
+        this.fechaHoraRechazo = fecha;
+    }
+    getFechaHoraRechazo() {
+        return this.fechaHoraRechazo;
+    }
+
     iniciarTemporizadores() {
         // Temporizador para cambiar a PENDIENTE_REVISION después de 5 minutos
         this.primerTemporizador = setTimeout(() => {
@@ -49,9 +60,9 @@ class EventoSismico {
                         this.estado = this.estado.siguienteEstado();
                         console.log(`Sismo ${this.id} cambió a estado: ${this.estado.getNombre()}`);
                     }
-                }, 15 * 1000); // 15 segundos
+                }, 15*60 * 1000); // 15 segundos
             }
-        }, 30 * 1000); // 30 segundos
+        }, 30 *60* 1000); // 30 segundos
     }
 
     limpiarTemporizadores() {

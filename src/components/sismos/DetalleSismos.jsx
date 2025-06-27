@@ -1,6 +1,14 @@
 import React from 'react';
 
-const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoton }) => {
+const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoton, user, estadoActual }) => {
+
+    
+    const fechaRechazo = sismo.getFechaHoraRechazo();
+    const formatFechaRechazo = fecha => {
+        if (!fecha) return null;
+        const opciones = { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' };
+        return fecha.toLocaleString('es-AR', opciones);
+    };
     return (
         <div>
             <h2>Detalle del Sismo #{sismo.id}</h2>
@@ -12,6 +20,15 @@ const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoto
             <p>Área Afectada: {sismo.getAreaAfectada()}</p>
             <p>Fecha de Detección: {sismo.getFechaDeteccion()}</p>
             <p>Hora de Detección: {sismo.getHoraDeteccion()}</p>
+
+            {estadoActual === 'Rechazado' && fechaRechazo && (
+                
+                <p style={{ color: 'red', fontWeight: 'bold' }}>
+                 Evento rechazado el {formatFechaRechazo(fechaRechazo)} por {typeof user === 'string' ? user:user.user}
+                 
+                </p>
+                
+            )}
             <button 
                 onClick={onIniciarRevision}
                 disabled={botonDeshabilitado}

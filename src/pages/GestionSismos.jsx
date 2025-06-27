@@ -6,7 +6,7 @@ import styles from './GestionSismos.module.css'; // Importa los estilos
 import GestorRevision from '../domain/GestorRevision'; // Importa el Gestor
 import Notificacion from '../components/sismos/Notificacion';
 
-const GestionSismos = () => {
+const GestionSismos = (user) => {
     const [sismos, setSismos] = useState([]);
     const [sismoSeleccionado, setSismoSeleccionado] = useState(null);
     const [modoRevision, setModoRevision] = useState(false);
@@ -24,6 +24,8 @@ const GestionSismos = () => {
                 return styles.estadoSinRevision;
             case 'Bloqueado en Revisión':
                     return styles.estadoBloqueadoEnRevision;
+            case 'Rechazado':
+                    return styles.estadoRechazado;
             default:
                 return '';
         }
@@ -104,8 +106,10 @@ const GestionSismos = () => {
         console.log(resultado.message); // Mostrar mensaje de éxito
 
 
-        if (revision.resultado === 'rechazado') {
+        if (revision.resultado === 'rechazado' && sismoSeleccionado) {
             sismoSeleccionado.rechazarEvento();
+            const ahora = new Date();
+            sismoSeleccionado.setFechaHoraRechazo(ahora);
         } else if (revision.resultado === 'aprobado') {
             sismoSeleccionado.confirmarEvento();
         }
@@ -116,6 +120,7 @@ const GestionSismos = () => {
         // Recargar la lista de sismos para reflejar los cambios
         const sismosActualizados = await GestorRevision.buscarSismos();
         setSismos(sismosActualizados);
+        
         } catch (error) {
         // Manejar el error (mostrar mensaje, etc.)
         console.error("Error al registrar revisión:", error);
@@ -157,8 +162,10 @@ const GestionSismos = () => {
                     <DetalleSismo 
                         sismo={sismoSeleccionado} 
                         onIniciarRevision={handleIniciarRevision}
-                        botonDeshabilitado={estadoActual === 'Evento sin Revisión'}
-                        estiloBoton={estadoActual === 'Evento sin Revisión' ? styles.botonDeshabilitado : ''}
+                        botonDeshabilitado={estadoActual === 'Evento sin Revisión' || estadoActual === 'Rechazado'}
+                        estiloBoton={(estadoActual === 'Evento sin Revisión'||estadoActual === 'Rechazado') ? styles.botonDeshabilitado : ''}
+                        user={user}
+                        estadoActual={estadoActual}
                     />
                 ) : (
                     <FormularioRevision

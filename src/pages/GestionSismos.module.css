@@ -68,6 +68,11 @@
     border: 1px solid rgb(11, 1, 97);
     color: #004585;
 }
+.estadoRechazado {
+    background-color: #f8d7da;
+    color: #721c24;
+    border:1px solid rgb(177, 10, 10);
+}
 
 .estadoContainer h3 {
     margin: 0;

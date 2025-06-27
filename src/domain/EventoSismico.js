@@ -16,6 +16,8 @@ class EventoSismico {
         this.areaSismo = areaSismo;
         this.areaAfectada = areaAfectada;
         this.fechaHoraRechazo = null;
+        this.fechaHoraConfirmacion = null; 
+ 
 
       
         
@@ -45,6 +47,13 @@ class EventoSismico {
     }
     getFechaHoraRechazo() {
         return this.fechaHoraRechazo;
+    }
+
+    setFechaHoraConfirmacion(fecha) {
+        this.fechaHoraConfirmacion = fecha;
+    }
+    getFechaHoraConfirmacion() {
+        return this.fechaHoraConfirmacion;
     }
 
     iniciarTemporizadores() {

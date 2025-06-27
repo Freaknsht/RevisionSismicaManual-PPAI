@@ -26,6 +26,8 @@ const GestionSismos = (user) => {
                     return styles.estadoBloqueadoEnRevision;
             case 'Rechazado':
                     return styles.estadoRechazado;
+            case 'Confirmado':
+                    return styles.estadoConfirmado;
             default:
                 return '';
         }
@@ -110,8 +112,12 @@ const GestionSismos = (user) => {
             sismoSeleccionado.rechazarEvento();
             const ahora = new Date();
             sismoSeleccionado.setFechaHoraRechazo(ahora);
+            sismoSeleccionado.user = user.user || user;
         } else if (revision.resultado === 'aprobado') {
             sismoSeleccionado.confirmarEvento();
+            const ahora = new Date();
+            sismoSeleccionado.setFechaHoraConfirmacion?.(ahora); 
+            sismoSeleccionado.user = user.user || user; 
         }
 
 
@@ -162,8 +168,8 @@ const GestionSismos = (user) => {
                     <DetalleSismo 
                         sismo={sismoSeleccionado} 
                         onIniciarRevision={handleIniciarRevision}
-                        botonDeshabilitado={estadoActual === 'Evento sin Revisión' || estadoActual === 'Rechazado'}
-                        estiloBoton={(estadoActual === 'Evento sin Revisión'||estadoActual === 'Rechazado') ? styles.botonDeshabilitado : ''}
+                        botonDeshabilitado={estadoActual === 'Evento sin Revisión' || estadoActual === 'Rechazado' ||estadoActual==='Confirmado'}
+                        estiloBoton={(estadoActual === 'Evento sin Revisión'||estadoActual === 'Rechazado') || estadoActual==='Confirmado'? styles.botonDeshabilitado : ''}
                         user={user}
                         estadoActual={estadoActual}
                     />

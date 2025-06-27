@@ -69,9 +69,30 @@
     color: #004585;
 }
 .estadoRechazado {
-    background-color: #f8d7da;
-    color: #721c24;
-    border:1px solid rgb(177, 10, 10);
+    color: #5a1f24; /* Rojo oscuro profundo */
+    background: linear-gradient(135deg, #f7c1c5 0%, #e07a80 100%);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(90, 31, 36, 0.25);
+    font-weight: 600;
+    font-size: inherit;
+    line-height: 1.4;
+    user-select: none;
+    transition: background 0.3s ease;
+}
+.estadoConfirmado {
+    color: #1a4d2e; /* Verde profundo */
+    background: linear-gradient(135deg, #d0f0c0 0%, #a8d5a2 100%);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(26, 77, 46, 0.25);
+    font-weight: 600;
+    font-size: inherit;
+    line-height: 1.4;
+    user-select: none;
+    transition: background 0.3s ease;
 }
 
 .estadoContainer h3 {

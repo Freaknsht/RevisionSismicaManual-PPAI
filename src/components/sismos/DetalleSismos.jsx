@@ -4,7 +4,8 @@ const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoto
 
     
     const fechaRechazo = sismo.getFechaHoraRechazo();
-    const formatFechaRechazo = fecha => {
+    const fechaConfirmacion = sismo.getFechaHoraConfirmacion();
+    const formatFecha = fecha => {
         if (!fecha) return null;
         const opciones = { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' };
         return fecha.toLocaleString('es-AR', opciones);
@@ -24,10 +25,15 @@ const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoto
             {estadoActual === 'Rechazado' && fechaRechazo && (
                 
                 <p style={{ color: 'red', fontWeight: 'bold' }}>
-                 Evento rechazado el {formatFechaRechazo(fechaRechazo)} por {typeof user === 'string' ? user:user.user}
+                 Evento rechazado el {formatFecha(fechaRechazo)} por {typeof user === 'string' ? user:user.user}
                  
                 </p>
                 
+            )}
+            {estadoActual === 'Confirmado' && fechaConfirmacion && (
+                <p style={{ color: 'green', fontWeight: 'bold' }} >
+                    Evento confirmado el {formatFecha(fechaConfirmacion)} por {typeof user === 'string' ? user:user.user}
+                </p>
             )}
             <button 
                 onClick={onIniciarRevision}

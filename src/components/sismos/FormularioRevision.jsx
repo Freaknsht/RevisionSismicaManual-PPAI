@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import styles from './FormularioRevision.module.css'; // Importa los estilos
+import styles from './FormularioRevision.module.css'; 
 import mapaZona from '../../picture/mapa-zona.jpg';
 
-const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) => { // onGuardarRevision
+const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision, onDerivar }) => { 
     const [resultado, setResultado] = useState('');
     const [observaciones, setObservaciones] = useState('');
     const [mostrarModalDerivar, setMostrarModalDerivar] = useState(false);
@@ -24,6 +24,17 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
         setSismos((prevSismos) =>
           prevSismos.map((s) => (s.id === sismo.id ? { ...s } : s))
         );
+    };
+
+
+
+    const handleConfirmarDerivar = () => {
+        if (!supervisorSeleccionado) {
+          alert('Por favor, seleccione un supervisor.');
+          return;
+        }
+        onDerivar(supervisorSeleccionado);  // La pasamos desde el padre
+        setMostrarModalDerivar(false);
     };
 
     return (
@@ -118,7 +129,7 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
                             <button onClick={() => setMostrarModalDerivar(false)} className={styles.cancelButton}>
                                 Cancelar
                             </button>
-                            <button className={styles.saveButton}>
+                            <button className={styles.saveButton} onClick={()=>{handleConfirmarDerivar(), onCancelarRevision()}}>
                                 Derivar
                             </button>
                         </div>

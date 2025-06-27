@@ -95,6 +95,20 @@
     transition: background 0.3s ease;
 }
 
+.estadoDerivadoAExperto {
+    color: #102177; /* Verde profundo */
+    background: linear-gradient(135deg, #d0f0c0 0%, #a2a7d5 100%);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(26, 77, 46, 0.25);
+    font-weight: 600;
+    font-size: inherit;
+    line-height: 1.4;
+    user-select: none;
+    transition: background 0.3s ease;
+  }
+
 .estadoContainer h3 {
     margin: 0;
     font-size: 1.1rem;

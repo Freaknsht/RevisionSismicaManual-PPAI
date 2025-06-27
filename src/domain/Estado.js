@@ -5,7 +5,7 @@ class Estado {
     static BLOQUEADO_EN_REVISION = new Estado('Bloqueado en Revisión', false);
     static RECHAZADO = new Estado('Rechazado', false);
     static CONFIRMADO = new Estado('Confirmado', false);
-
+    static DERIVADO_A_EXPERTO = new Estado('Derivado a experto', false);
 
 
     constructor(nombre, puedeRevisar) {
@@ -46,6 +46,9 @@ class Estado {
     
     esBloqueadoEnRevision() {
         return this === Estado.BLOQUEADO_EN_REVISION;
+    }
+    esDerivadoAExperto() {
+        return this === Estado.DERIVADO_A_EXPERTO;
     }
 }
 

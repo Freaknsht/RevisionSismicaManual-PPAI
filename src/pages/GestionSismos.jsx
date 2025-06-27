@@ -28,6 +28,8 @@ const GestionSismos = (user) => {
                     return styles.estadoRechazado;
             case 'Confirmado':
                     return styles.estadoConfirmado;
+            case 'Derivado a experto':
+                    return styles.estadoDerivadoAExperto;
             default:
                 return '';
         }
@@ -148,7 +150,30 @@ const GestionSismos = (user) => {
     const handleModificarDatos = () => {
         alert("Aquí iría la lógica para abrir el formulario de modificación de datos.");
     };
+    
+
+    const handleDerivarASupervisor = async (supervisor) => {
+        if (!sismoSeleccionado) return;
       
+        sismoSeleccionado.derivarAExperto(supervisor);
+      
+        // Actualizamos la UI:
+        setEstadoActual(Estado.DERIVADO_A_EXPERTO.getNombre());
+        setModoRevision(false);
+        setNotificacion(`Evento derivado a supervisor ${supervisor}`);
+        setSismoSeleccionado(sismoSeleccionado);
+        setSismoSeleccionado(null);
+        
+      
+        // Recargamos la lista de sismos para reflejar cambios
+        const sismosActualizados = await GestorRevision.buscarSismos();
+        setSismos(sismosActualizados);
+    };
+
+
+
+
+
 
     return (
         <div className={styles.gestionSismosContainer}>
@@ -178,6 +203,7 @@ const GestionSismos = (user) => {
                         sismo={sismoSeleccionado}
                         onGuardarRevision={handleRegistrarResultado}
                         onCancelarRevision={handleCancelarRevision}
+                        onDerivar={handleDerivarASupervisor}
                     />
                 )}
 

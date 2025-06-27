@@ -131,6 +131,21 @@ class EventoSismico {
     confirmarEvento() {
         this.registrarCambioEstado(new Estado('Confirmado', false));
     }
+
+    derivarAExperto(supervisor) {
+        this.limpiarTemporizadores();
+        this.registrarCambioEstado(Estado.DERIVADO_A_EXPERTO);
+        this.supervisorAsignado = supervisor; // Guardamos supervisor elegido
+        this.fechaHoraDerivacion = new Date();
+        console.log(`Evento ${this.id} derivado a experto: ${supervisor}`);
+    }
+    
+    getSupervisorAsignado() {
+        return this.supervisorAsignado || null;
+    }
+    getFechaHoraDerivacion() {
+        return this.fechaHoraDerivacion;
+    }
     
     
 

@@ -5,6 +5,8 @@ const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoto
     
     const fechaRechazo = sismo.getFechaHoraRechazo();
     const fechaConfirmacion = sismo.getFechaHoraConfirmacion();
+    const fechaDerivacion = sismo.getFechaHoraDerivacion();
+
     const formatFecha = fecha => {
         if (!fecha) return null;
         const opciones = { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' };
@@ -35,6 +37,13 @@ const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoto
                     Evento confirmado el {formatFecha(fechaConfirmacion)} por {typeof user === 'string' ? user:user.user}
                 </p>
             )}
+
+            {estadoActual === 'Derivado a experto' && fechaDerivacion && (
+                <p style={{ color: 'blue', fontWeight: 'bold' }}>
+                    Ha sido derivado el {formatFecha(fechaDerivacion)} por {typeof user === 'string' ? user : user.user}
+                </p>
+            )}
+
             <button 
                 onClick={onIniciarRevision}
                 disabled={botonDeshabilitado}

@@ -3,6 +3,10 @@ class Estado {
     static PENDIENTE_REVISION = new Estado('Pendiente de Revisión', true);
     static EVENTO_SIN_REVISION = new Estado('Evento sin Revisión', false);
     static BLOQUEADO_EN_REVISION = new Estado('Bloqueado en Revisión', false);
+    static RECHAZADO = new Estado('Rechazado', false);
+    static CONFIRMADO = new Estado('Confirmado', false);
+
+
 
     constructor(nombre, puedeRevisar) {
         this.nombre = nombre;

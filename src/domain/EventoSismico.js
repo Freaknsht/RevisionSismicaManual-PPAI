@@ -103,6 +103,17 @@ class EventoSismico {
         }
     }
 
+    rechazarEvento() {
+        this.limpiarTemporizadores();
+        this.registrarCambioEstado(Estado.RECHAZADO);
+    }
+
+    confirmarEvento() {
+        this.registrarCambioEstado(new Estado('Confirmado', false));
+    }
+    
+    
+
     puedeIniciarRevision() {
         return this.estado.puedeIniciarRevision();
     }

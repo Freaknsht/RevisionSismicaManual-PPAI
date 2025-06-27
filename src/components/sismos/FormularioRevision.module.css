@@ -221,3 +221,64 @@
     color: black;
 
 }
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContenido {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-align: center;
+    width: 300px;
+}
+
+.modalContenido h3 {
+    margin-bottom: 10px;
+}
+
+.modalContenido ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.modalContenido li {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.modalBotones {
+    display: flex;
+    justify-content: space-between;
+}
+
+.listaSupervisores li {
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+.listaSupervisores li:hover {
+    background-color: #f0f0f0;
+    cursor: pointer !important;
+    
+}
+
+.supervisorActivo {
+    background-color: #d0eaff;
+    font-weight: bold;
+    color: #005b96;
+}

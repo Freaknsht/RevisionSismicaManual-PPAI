@@ -102,8 +102,17 @@ const GestionSismos = () => {
         try {
         const resultado = await GestorRevision.registrarResultadoRevision(revision);
         console.log(resultado.message); // Mostrar mensaje de éxito
+
+
+        if (revision.resultado === 'rechazado') {
+            sismoSeleccionado.rechazarEvento();
+        } else if (revision.resultado === 'aprobado') {
+            sismoSeleccionado.confirmarEvento();
+        }
+
+
         setModoRevision(false);
-        setSismoSeleccionado(null);
+        setSismoSeleccionado(sismoSeleccionado);
         // Recargar la lista de sismos para reflejar los cambios
         const sismosActualizados = await GestorRevision.buscarSismos();
         setSismos(sismosActualizados);

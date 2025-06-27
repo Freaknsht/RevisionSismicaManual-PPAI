@@ -5,6 +5,10 @@ import mapaZona from '../../picture/mapa-zona.jpg';
 const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) => { // onGuardarRevision
     const [resultado, setResultado] = useState('');
     const [observaciones, setObservaciones] = useState('');
+    const [mostrarModalDerivar, setMostrarModalDerivar] = useState(false);
+    const [supervisorSeleccionado, setSupervisorSeleccionado] = useState('');
+
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -84,13 +88,44 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision }) =>
                         Guardar Revisión
                     </button>
                     <button
-                        type="submit"
-                        className={styles.DerivarButton}
+                       type="button"
+                       onClick={() => setMostrarModalDerivar(true)}
+                       className={styles.DerivarButton}
                     >
                         Derivar a supervisor
                     </button>
                 </div>
             </form>
+
+            {mostrarModalDerivar && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContenido}>
+                        <h3>Elegir Supervisor</h3>
+                        <ul>
+                            <li className={supervisorSeleccionado === 'Juan López' ? styles.supervisorActivo : ''}
+                                onClick={() => setSupervisorSeleccionado('Juan López')}>
+                                    Juan López
+                            </li>
+
+
+
+                            <li  className={supervisorSeleccionado === 'María Gómez' ? styles.supervisorActivo : ''}
+                                 onClick={() => setSupervisorSeleccionado('María Gómez')}>
+                                    María Gómez
+                            </li>
+                        </ul>
+                        <div className={styles.modalBotones}>
+                            <button onClick={() => setMostrarModalDerivar(false)} className={styles.cancelButton}>
+                                Cancelar
+                            </button>
+                            <button className={styles.saveButton}>
+                                Derivar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
            </div>
         </div>
     );

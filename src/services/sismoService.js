@@ -6,6 +6,10 @@ const fechaVieja = new Date();
 fechaVieja.setDate(fechaVieja.getDate() - 1); // Ayer
 fechaVieja.setHours(9, 15);
 
+const fechaMasVieja = new Date(fechaVieja);
+fechaMasVieja.setDate(fechaMasVieja.getDate() - 1); // Dos días atrás
+fechaMasVieja.setHours(8, 0);
+
 // Simulamos una base de datos de sismos
 const sismosMock = [
     new EventoSismico(
@@ -35,7 +39,22 @@ const sismosMock = [
         "Intermedio",
         "Valle de Uco",
         "Zona Rural Mendoza"
+    ),
+    new EventoSismico(
+        3,
+        fechaMasVieja,            
+        -33.0153,
+        -71.5500,
+        -33.0,
+        -71.6,
+        3.9,
+        "Volcánico",
+        "Amplio",
+        "Profundo",
+        "Cordillera de los Andes Sur",
+        "Zona Fronteriza Chile-Argentina"
     )
+
 ];
 
 export const obtenerSismos = async () => {

@@ -48,6 +48,7 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision, onDe
                     <p><b>Origen:</b> {sismo.getOrigen()}</p>
                     <p><b>Alcance:</b> {sismo.getAlcance()}</p>
                     <p><b>Clasificación:</b> {sismo.getClasificacion()}</p>
+                    <button className={styles.botonModificarDatos}>Modificar datos</button>
                 </div>
                 <div>
                     <h3>Ubicación</h3>

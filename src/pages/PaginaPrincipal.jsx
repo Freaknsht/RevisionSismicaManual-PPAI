@@ -8,7 +8,7 @@ function PaginaPrincipal({ user, onIrAGestion }) {
       <h3>Bienvenido: {Usuario}</h3>
       <img className="redsismicaimagen" src="../../redsismica.png" alt="" />
       <button className="botonSeleccionar" onClick={onIrAGestion}>
-        Registrar revisión manual
+        Registrar resultado de revisión manual
       </button>
     </div>
   );

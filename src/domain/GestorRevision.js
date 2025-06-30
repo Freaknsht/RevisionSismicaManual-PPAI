@@ -3,7 +3,7 @@ import Estado from './Estado';
 
 const GestorRevision = {
     //Simula la obtención de sismos desde un servicio
-    buscarSismos: async () => {
+    buscarEventoAutodetectado: async () => {
         try {
         const sismos = await obtenerSismos();
         return sismos;
@@ -19,7 +19,7 @@ const GestorRevision = {
         return sismo;
     },
 
-    tomarDatosRevision: (sismo) => {
+    tomarDatosSeleccion: (sismo) => {
         // Verificamos si el sismo es autodetectado
         const esAutodetectado = sismo.esAutodetectado();
         

@@ -22,7 +22,7 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision, onDe
         sismo.cancelarRevision();
         // vuelve al estado anterior
         setSismos((prevSismos) =>
-          prevSismos.map((s) => (s.id === sismo.id ? { ...s } : s))
+            prevSismos.map((s) => (s.id === sismo.id ? { ...s } : s))
         );
     };
 
@@ -30,8 +30,8 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision, onDe
 
     const handleConfirmarDerivar = () => {
         if (!supervisorSeleccionado) {
-          alert('Por favor, seleccione un supervisor.');
-          return;
+            alert('Por favor, seleccione un supervisor.');
+            return;
         }
         onDerivar(supervisorSeleccionado);  // La pasamos desde el padre
         setMostrarModalDerivar(false);
@@ -48,6 +48,7 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision, onDe
                     <p><b>Origen:</b> {sismo.getOrigen()}</p>
                     <p><b>Alcance:</b> {sismo.getAlcance()}</p>
                     <p><b>Clasificación:</b> {sismo.getClasificacion()}</p>
+                    <button className={styles.botonModificarDatos}>Modificar datos</button>
                 </div>
                 <div>
                     <h3>Ubicación</h3>
@@ -99,9 +100,9 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision, onDe
                         Guardar Revisión
                     </button>
                     <button
-                       type="button"
-                       onClick={() => setMostrarModalDerivar(true)}
-                       className={styles.DerivarButton}
+                        type="button"
+                        onClick={() => setMostrarModalDerivar(true)}
+                        className={styles.DerivarButton}
                     >
                         Derivar a supervisor
                     </button>
@@ -121,7 +122,7 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision, onDe
 
 
                             <li  className={supervisorSeleccionado === 'María Gómez' ? styles.supervisorActivo : ''}
-                                 onClick={() => setSupervisorSeleccionado('María Gómez')}>
+                                    onClick={() => setSupervisorSeleccionado('María Gómez')}>
                                     María Gómez
                             </li>
                         </ul>
@@ -137,7 +138,7 @@ const FormularioRevision = ({ sismo, onGuardarRevision, onCancelarRevision, onDe
                 </div>
             )}
 
-           </div>
+            </div>
         </div>
     );
 };

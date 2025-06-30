@@ -60,11 +60,11 @@ const GestionSismos = (user) => {
     }, [sismoSeleccionado]);
 
     // Simulación de carga de datos desde el backend
-    //llama a GestorRevision.buscarSismos() para cargar los sismos
+    //llama a GestorRevision.buscarEventoAutodetectado() para cargar los sismos
     useEffect(() => {
         const cargarSismos = async () => {
         try {
-            const sismosCargados = await GestorRevision.buscarSismos();
+            const sismosCargados = await GestorRevision.buscarEventoAutodetectado();
             setSismos(sismosCargados);
         } catch (error) {
             // Manejar el error (mostrar mensaje, etc.)
@@ -82,7 +82,7 @@ const GestionSismos = (user) => {
         setModoRevision(false); // Cerrar revisión al seleccionar otro sismo
     };
 
-    // Llama a GestorRevision.tomarDatosRevision()
+    // Llama a GestorRevision.tomarDatosSeleccion()
     const handleIniciarRevision = () => {
         const pudoBloquear = GestorRevision.buscarEstadoBloqueadoEnRevision(sismoSeleccionado);
     if (pudoBloquear) {
@@ -94,14 +94,6 @@ const GestionSismos = (user) => {
     }
     };
 
-    /*
-    const handleGuardarRevision = (resultadoRevision) => {
-        // Aquí iría la lógica para guardar la revisión en el backend
-        console.log('Resultado de la revisión:', resultadoRevision);
-        setModoRevision(false);
-        setSismoSeleccionado(null); // Opcional: limpiar el sismo seleccionado
-    };
-    */
 
     //Llama a GestorRevision.registrarResultadoRevision() y maneja la respuesta (éxito o error). Recarga la lista de sismos después de guardar la revisión.
     const handleRegistrarResultado = async (revision) => {
@@ -126,7 +118,7 @@ const GestionSismos = (user) => {
         setModoRevision(false);
         setSismoSeleccionado(sismoSeleccionado);
         // Recargar la lista de sismos para reflejar los cambios
-        const sismosActualizados = await GestorRevision.buscarSismos();
+        const sismosActualizados = await GestorRevision.buscarEventoAutodetectado();
         setSismos(sismosActualizados);
         
         } catch (error) {
@@ -154,9 +146,9 @@ const GestionSismos = (user) => {
 
     const handleDerivarASupervisor = async (supervisor) => {
         if (!sismoSeleccionado) return;
-      
+    
         sismoSeleccionado.derivarAExperto(supervisor);
-      
+    
         // Actualizamos la UI:
         setEstadoActual(Estado.DERIVADO_A_EXPERTO.getNombre());
         setModoRevision(false);
@@ -164,13 +156,11 @@ const GestionSismos = (user) => {
         setSismoSeleccionado(sismoSeleccionado);
         setSismoSeleccionado(null);
         
-      
+    
         // Recargamos la lista de sismos para reflejar cambios
-        const sismosActualizados = await GestorRevision.buscarSismos();
+        const sismosActualizados = await GestorRevision.buscarEventoAutodetectado();
         setSismos(sismosActualizados);
     };
-
-
 
 
 
@@ -209,8 +199,8 @@ const GestionSismos = (user) => {
 
                 {notificacion && (
                         <Notificacion 
-                             message={notificacion} 
-                             onClose={() => setNotificacion(null)} 
+                            message={notificacion} 
+                            onClose={() => setNotificacion(null)} 
                              duration={4000} // dura 4 segundos
                         />
                 )}

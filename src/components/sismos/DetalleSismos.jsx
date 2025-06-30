@@ -27,8 +27,8 @@ const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoto
             {estadoActual === 'Rechazado' && fechaRechazo && (
                 
                 <p style={{ color: 'red', fontWeight: 'bold' }}>
-                 Evento rechazado el {formatFecha(fechaRechazo)} por {typeof user === 'string' ? user:user.user}
-                 
+                    Evento rechazado el {formatFecha(fechaRechazo)} por {typeof user === 'string' ? user:user.user}
+                    
                 </p>
                 
             )}
@@ -48,7 +48,6 @@ const DetalleSismo = ({ sismo, onIniciarRevision, botonDeshabilitado, estiloBoto
                 onClick={onIniciarRevision}
                 disabled={botonDeshabilitado}
                 className={estiloBoton}
-              
             >
                 Iniciar Revisión Manual
             </button>

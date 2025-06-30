@@ -2,7 +2,7 @@ import Estado from './Estado';
 import CambioEstado from './CambioEstado';
 
 class EventoSismico {
-    constructor(id, fechaHora, latitudEp, longitudEp, latitudHip, longitudHip, magnitud, origen, alcance, clasificacion, areaSismo, areaAfectada) {
+    constructor(id, fechaHora, latitudEp, longitudEp, latitudHip, longitudHip, magnitud, origen, alcance, clasificacion, areaSismo, areaAfectada, serieTemporal, sismografo) {
         this.id = id;
         this.fechaHora = fechaHora;
         this.latitudEp = latitudEp;
@@ -17,9 +17,12 @@ class EventoSismico {
         this.areaAfectada = areaAfectada;
         this.fechaHoraRechazo = null;
         this.fechaHoraConfirmacion = null; 
- 
 
-      
+        this.alcance = alcance; // instancia de AlcanceSismico
+        this.clasificacion = clasificacion; // instancia de ClasificacionSismo
+        this.origen = origen; // instancia de OrigenDeGeneracion
+        this.serieTemporal = serieTemporal; // instancia de SerieTemporal
+        this.sismografo = sismografo; // instancia de Sismografo
         
         
         // Separar fecha y hora de detección
@@ -69,9 +72,9 @@ class EventoSismico {
                         this.estado = this.estado.siguienteEstado();
                         console.log(`Sismo ${this.id} cambió a estado: ${this.estado.getNombre()}`);
                     }
-                }, 15*60 * 1000); // 15 segundos
+                }, 60 * 1000); // 1 minuto
             }
-        }, 30 *60* 1000); // 30 segundos
+        }, 90 * 1000); // 1 minuto y medio
     }
 
     limpiarTemporizadores() {
@@ -147,6 +150,21 @@ class EventoSismico {
         return this.fechaHoraDerivacion;
     }
     
+    getAlcance() {
+        return this.alcance.getNombre();
+    }
+    getClasificacion() {
+        return this.clasificacion.getNombre();
+    }
+    getOrigen() {
+        return this.origen.getNombre();
+    }
+    getSerieTemporal() {
+        return this.serieTemporal;
+    }
+    buscarSismografoConectado() {
+        return this.sismografo;
+    }
     
 
     puedeIniciarRevision() {
@@ -179,18 +197,6 @@ class EventoSismico {
 
     getMagnitud() {
         return this.magnitud;
-    }
-
-    getOrigen() {
-        return this.origen;
-    }
-
-    getAlcance() {
-        return this.alcance;
-    }
-
-    getClasificacion() {
-        return this.clasificacion;
     }
 
     getAreaSismo() {

@@ -1,5 +1,4 @@
 import './sesion.css';
-import { useState } from 'react';
 
 function Sesion({ onIniciarSesion, setUser }) {
   return (

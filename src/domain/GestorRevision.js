@@ -1,5 +1,6 @@
 import { obtenerSismos, guardarRevisionSismo } from '../services/sismoService'; // Simula llamadas al backend (luego lo reemplazaremos)
 import Estado from './Estado';
+import SerieTemporal from './SerieTemporal';
 
 const GestorRevision = {
     //Simula la obtención de sismos desde un servicio
@@ -39,7 +40,8 @@ const GestorRevision = {
                 areaSismo: sismo.getAreaSismo(),
                 areaAfectada: sismo.getAreaAfectada(),
                 fechaDeteccion: sismo.getFechaDeteccion(),
-                horaDeteccion: sismo.getHoraDeteccion()
+                horaDeteccion: sismo.getHoraDeteccion(),
+                validacionDatos: sismo.ValidarDatosYSeleccion,
             };
             return datosSismo;
         }
@@ -58,6 +60,12 @@ const GestorRevision = {
         }
     },
 
+    //Obtiene fecha y hora actual.
+    tomarFechaHoraActual:()=>{
+        const fechaHoraActual = new Date();
+    },
+
+
     //Lógica para cancelar la revisión.
     cancelarRevision: () => {
         // Lógica para cancelar (por ahora no hay nada específico)
@@ -67,6 +75,9 @@ const GestorRevision = {
     buscarEstadoBloqueadoEnRevision: (evento) => {
         // Obtener el estado actual del evento
     const estadoActual = evento.getEstado();
+   
+
+        
 
     // Verificar si el estado actual es Autodetectado o Pendiente de Revisión
     const nombreEstado = estadoActual.getNombre();
@@ -81,9 +92,25 @@ const GestorRevision = {
     return false;
     },
 
-    buscarEmpleadoLogueado: () => {
-        return localStorage.getItem('usuarioLogueado') || null;
+    buscarEmpleadoLogueado: () => {             //Obtener usuario Logueado
+        obtenerUsuarioLogueado();
     },
+
+    obtenerSeriesTemporales:()=>{
+        getMuestras;
+    },
+
+    habilitarOpcionVisualizarEnMapa:()=>{
+        console.log("visualizacion")
+    },
+    permitirModificacionDeDatos:()=>{
+        console.log("modificacion")
+    },
+    
+    ValidarDatosYSeleccion:()=>{
+        validacionDatos;
+    },
+
 
     bloquearEvento: (evento) => {
         const ultimoCambio = evento.buscarUltimoCambioEstado();
@@ -92,6 +119,12 @@ const GestorRevision = {
         }
         evento.registrarCambioEstado(Estado.BLOQUEADO_EN_REVISION);
     },
+
+
+    buscarEventoRechazado: async () => {
+        esAmbitoEventoSismico;
+        esRechazado;
+    }
 };
 
 export default GestorRevision;

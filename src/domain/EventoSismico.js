@@ -13,10 +13,12 @@ class EventoSismico {
         this.origen = origen;
         this.alcance = alcance;
         this.clasificacion = clasificacion;
+        this.clasificacionOrdeada;
         this.areaSismo = areaSismo;
         this.areaAfectada = areaAfectada;
         this.fechaHoraRechazo = null;
         this.fechaHoraConfirmacion = null; 
+        this.GenerarSismograma;
 
         this.alcance = alcance; // instancia de AlcanceSismico
         this.clasificacion = clasificacion; // instancia de ClasificacionSismo
@@ -165,6 +167,16 @@ class EventoSismico {
     buscarSismografoConectado() {
         return this.sismografo;
     }
+
+    clasificarInformacion(){
+        return this.clasificacionOrdenada;
+    }
+
+    invocarGenerarSismograma(){
+        return this.GenerarSismograma;
+    }
+
+ 
     
 
     puedeIniciarRevision() {

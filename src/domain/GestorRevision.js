@@ -33,7 +33,7 @@ const GestorRevision = {
                 latitudHip: sismo.getLatitudHip(),
                 longitudHip: sismo.getLongitudHip(),
                 magnitud: sismo.getMagnitud(),
-                //De aca para abajo no deberia estar(? o no en este llamado
+    
                 origen: sismo.getOrigen(),
                 alcance: sismo.getAlcance(),
                 clasificacion: sismo.getClasificacion(),
@@ -63,6 +63,7 @@ const GestorRevision = {
     //Obtiene fecha y hora actual.
     tomarFechaHoraActual:()=>{
         const fechaHoraActual = new Date();
+        return fechaHoraActual
     },
 
 
@@ -122,8 +123,10 @@ const GestorRevision = {
 
 
     buscarEventoRechazado: async () => {
-        esAmbitoEventoSismico;
-        esRechazado;
+       if (esAmbitoEventoSismico) {
+        return esRechazado;
+       }
+        
     }
 };
 

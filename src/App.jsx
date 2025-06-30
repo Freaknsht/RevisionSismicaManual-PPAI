@@ -18,7 +18,7 @@ function App() {
         <PaginaPrincipal onIrAGestion={() => setPaginaActual('gestion')}  user={user}/>
       )}
       {paginaActual === 'gestion' && (
-        <GestionSismos />
+        <GestionSismos  user={user}/>
       )}
     </div>
   );

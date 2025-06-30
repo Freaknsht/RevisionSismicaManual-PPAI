@@ -1,8 +1,9 @@
 import { obtenerSismos, guardarRevisionSismo } from '../services/sismoService'; // Simula llamadas al backend (luego lo reemplazaremos)
+import Estado from './Estado';
 
 const GestorRevision = {
     //Simula la obtención de sismos desde un servicio
-    buscarSismos: async () => {
+    buscarEventoAutodetectado: async () => {
         try {
         const sismos = await obtenerSismos();
         return sismos;
@@ -18,7 +19,7 @@ const GestorRevision = {
         return sismo;
     },
 
-    tomarDatosRevision: (sismo) => {
+    tomarDatosSeleccion: (sismo) => {
         // Verificamos si el sismo es autodetectado
         const esAutodetectado = sismo.esAutodetectado();
         
@@ -31,6 +32,7 @@ const GestorRevision = {
                 latitudHip: sismo.getLatitudHip(),
                 longitudHip: sismo.getLongitudHip(),
                 magnitud: sismo.getMagnitud(),
+                //De aca para abajo no deberia estar(? o no en este llamado
                 origen: sismo.getOrigen(),
                 alcance: sismo.getAlcance(),
                 clasificacion: sismo.getClasificacion(),
@@ -60,7 +62,36 @@ const GestorRevision = {
     cancelarRevision: () => {
         // Lógica para cancelar (por ahora no hay nada específico)
         return { success: true, message: "Revisión cancelada" };
+    },
+
+    buscarEstadoBloqueadoEnRevision: (evento) => {
+        // Obtener el estado actual del evento
+    const estadoActual = evento.getEstado();
+
+    // Verificar si el estado actual es Autodetectado o Pendiente de Revisión
+    const nombreEstado = estadoActual.getNombre();
+    if (nombreEstado === 'Autodetectado' || nombreEstado === 'Pendiente de Revisión') {
+        // Si está en uno de estos estados, verificar si puede iniciar revisión
+        if (estadoActual.puedeIniciarRevision()) {
+            // Cambia el estado del evento
+            evento.iniciarRevision();
+            return true;
+        }
     }
+    return false;
+    },
+
+    buscarEmpleadoLogueado: () => {
+        return localStorage.getItem('usuarioLogueado') || null;
+    },
+
+    bloquearEvento: (evento) => {
+        const ultimoCambio = evento.buscarUltimoCambioEstado();
+        if (ultimoCambio) {
+            ultimoCambio.cerrarCambio(new Date());
+        }
+        evento.registrarCambioEstado(Estado.BLOQUEADO_EN_REVISION);
+    },
 };
 
 export default GestorRevision;

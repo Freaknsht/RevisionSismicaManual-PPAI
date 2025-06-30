@@ -1,7 +1,8 @@
 import Estado from './Estado';
+import CambioEstado from './CambioEstado';
 
 class EventoSismico {
-    constructor(id, fechaHora, latitudEp, longitudEp, latitudHip, longitudHip, magnitud, origen, alcance, clasificacion, areaSismo, areaAfectada) {
+    constructor(id, fechaHora, latitudEp, longitudEp, latitudHip, longitudHip, magnitud, origen, alcance, clasificacion, areaSismo, areaAfectada, serieTemporal, sismografo) {
         this.id = id;
         this.fechaHora = fechaHora;
         this.latitudEp = latitudEp;
@@ -14,19 +15,48 @@ class EventoSismico {
         this.clasificacion = clasificacion;
         this.areaSismo = areaSismo;
         this.areaAfectada = areaAfectada;
+        this.fechaHoraRechazo = null;
+        this.fechaHoraConfirmacion = null; 
+
+        this.alcance = alcance; // instancia de AlcanceSismico
+        this.clasificacion = clasificacion; // instancia de ClasificacionSismo
+        this.origen = origen; // instancia de OrigenDeGeneracion
+        this.serieTemporal = serieTemporal; // instancia de SerieTemporal
+        this.sismografo = sismografo; // instancia de Sismografo
+        
         
         // Separar fecha y hora de detección
         const fechaActual = new Date();
-        this.fechaDeteccion = fechaActual.toLocaleDateString();
-        this.horaDeteccion = fechaActual.toLocaleTimeString();
+        // Después
+        this.fechaDeteccion = fechaHora.toLocaleDateString();
+        this.horaDeteccion = fechaHora.toLocaleTimeString();
+
         
+        this.cambiosEstado = [];
         // Inicializar estado según magnitud
         this.estado = magnitud < 4 ? Estado.AUTODETECTADO : null;
+        if (this.estado) {
+            this.registrarCambioEstado(this.estado);
+        }
         
         // Iniciar temporizadores si es autodetectado
         if (this.estado === Estado.AUTODETECTADO) {
             this.iniciarTemporizadores();
         }
+    }
+
+    setFechaHoraRechazo(fecha) {
+        this.fechaHoraRechazo = fecha;
+    }
+    getFechaHoraRechazo() {
+        return this.fechaHoraRechazo;
+    }
+
+    setFechaHoraConfirmacion(fecha) {
+        this.fechaHoraConfirmacion = fecha;
+    }
+    getFechaHoraConfirmacion() {
+        return this.fechaHoraConfirmacion;
     }
 
     iniciarTemporizadores() {
@@ -42,9 +72,9 @@ class EventoSismico {
                         this.estado = this.estado.siguienteEstado();
                         console.log(`Sismo ${this.id} cambió a estado: ${this.estado.getNombre()}`);
                     }
-                }, 5 * 60 * 1000); // 5 minutos
+                }, 60 * 1000); // 1 minuto
             }
-        }, 5 * 60 * 1000); // 5 minutos
+        }, 90 * 1000); // 1 minuto y medio
     }
 
     limpiarTemporizadores() {
@@ -56,14 +86,86 @@ class EventoSismico {
         }
     }
 
+    registrarCambioEstado(nuevoEstado) {
+        const ahora = new Date();
+        // Cierra el último cambio si existe
+        if (this.cambiosEstado.length > 0) {
+            this.cambiosEstado[this.cambiosEstado.length - 1].cerrarCambio(ahora);
+        }
+        // Agrega el nuevo cambio de estado
+        this.cambiosEstado.push(new CambioEstado(nuevoEstado, ahora));
+        this.estado = nuevoEstado;
+    }
+
+    buscarUltimoCambioEstado() {
+        if (this.cambiosEstado.length === 0) return null;
+        return this.cambiosEstado[this.cambiosEstado.length - 1];
+    }
+
     iniciarRevision() {
         if (this.estado.puedeIniciarRevision()) {
-            this.limpiarTemporizadores(); // Detener los temporizadores
-            this.estado = this.estado.iniciarRevision();
+            this.limpiarTemporizadores();
+            this.registrarCambioEstado(Estado.BLOQUEADO_EN_REVISION);
             return true;
         }
         return false;
     }
+
+    cancelarRevision() {
+        const ultimoCambio = this.buscarUltimoCambioEstado();
+        if (ultimoCambio && this.estado.esBloqueadoEnRevision()) {
+            // Cerramos el registro actual de BLOQUEADO_EN_REVISION
+            ultimoCambio.cerrarCambio(new Date());
+    
+            // El penúltimo registro tiene el estado al que debemos regresar
+            const anteriorCambio = this.cambiosEstado[this.cambiosEstado.length - 2];
+            if (anteriorCambio) {
+                this.estado = anteriorCambio.getEstado();
+                this.registrarCambioEstado(this.estado);
+            }
+        }
+    }
+
+    rechazarEvento() {
+        this.limpiarTemporizadores();
+        this.registrarCambioEstado(Estado.RECHAZADO);
+    }
+
+    confirmarEvento() {
+        this.registrarCambioEstado(new Estado('Confirmado', false));
+    }
+
+    derivarAExperto(supervisor) {
+        this.limpiarTemporizadores();
+        this.registrarCambioEstado(Estado.DERIVADO_A_EXPERTO);
+        this.supervisorAsignado = supervisor; // Guardamos supervisor elegido
+        this.fechaHoraDerivacion = new Date();
+        console.log(`Evento ${this.id} derivado a experto: ${supervisor}`);
+    }
+    
+    getSupervisorAsignado() {
+        return this.supervisorAsignado || null;
+    }
+    getFechaHoraDerivacion() {
+        return this.fechaHoraDerivacion;
+    }
+    
+    getAlcance() {
+        return this.alcance.getNombre();
+    }
+    getClasificacion() {
+        return this.clasificacion.getNombre();
+    }
+    getOrigen() {
+        return this.origen.getNombre();
+    }
+    getSerieTemporal() {
+        return this.serieTemporal;
+    }
+    buscarSismografoConectado() {
+        return this.sismografo;
+    }
+    
 
     puedeIniciarRevision() {
         return this.estado.puedeIniciarRevision();
@@ -97,18 +199,6 @@ class EventoSismico {
         return this.magnitud;
     }
 
-    getOrigen() {
-        return this.origen;
-    }
-
-    getAlcance() {
-        return this.alcance;
-    }
-
-    getClasificacion() {
-        return this.clasificacion;
-    }
-
     getAreaSismo() {
         return this.areaSismo;
     }
@@ -124,6 +214,11 @@ class EventoSismico {
     getHoraDeteccion() {
         return this.horaDeteccion;
     }
+
+    esAutodetectado() {
+        return this.estado.getNombre() === 'Autodetectado';
+    }
+    
 }
 
-export default EventoSismico; 
+export default EventoSismico;

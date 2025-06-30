@@ -3,6 +3,10 @@ class Estado {
     static PENDIENTE_REVISION = new Estado('Pendiente de Revisión', true);
     static EVENTO_SIN_REVISION = new Estado('Evento sin Revisión', false);
     static BLOQUEADO_EN_REVISION = new Estado('Bloqueado en Revisión', false);
+    static RECHAZADO = new Estado('Rechazado', false);
+    static CONFIRMADO = new Estado('Confirmado', false);
+    static DERIVADO_A_EXPERTO = new Estado('Derivado a experto', false);
+
 
     constructor(nombre, puedeRevisar) {
         this.nombre = nombre;
@@ -33,6 +37,18 @@ class Estado {
             return Estado.BLOQUEADO_EN_REVISION;
         }
         return this;
+    }
+
+    esAmbitoEventoSismico(evento) {
+        // Si tu modelo no tiene historial de estados, asumimos que sí
+        return true; // porque este estado ya es parte del evento
+    }
+    
+    esBloqueadoEnRevision() {
+        return this === Estado.BLOQUEADO_EN_REVISION;
+    }
+    esDerivadoAExperto() {
+        return this === Estado.DERIVADO_A_EXPERTO;
     }
 }
 

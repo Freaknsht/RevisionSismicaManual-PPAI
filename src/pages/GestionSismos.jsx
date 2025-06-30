@@ -4,22 +4,32 @@ import DetalleSismo from '../components/sismos/DetalleSismos';
 import FormularioRevision from '../components/sismos/FormularioRevision';
 import styles from './GestionSismos.module.css'; // Importa los estilos
 import GestorRevision from '../domain/GestorRevision'; // Importa el Gestor
+import Notificacion from '../components/sismos/Notificacion';
 
-const GestionSismos = () => {
+const GestionSismos = (user) => {
     const [sismos, setSismos] = useState([]);
     const [sismoSeleccionado, setSismoSeleccionado] = useState(null);
     const [modoRevision, setModoRevision] = useState(false);
     const [estadoActual, setEstadoActual] = useState(null);
+    const [notificacion, setNotificacion] = useState(null);
 
     // Función para obtener la clase de estilo según el estado
     const getEstadoClass = (estado) => {
         switch (estado) {
             case 'Autodetectado':
                 return styles.estadoAutodetectado;
-            case 'Pendiente Revisión':
+            case 'Pendiente de Revisión':
                 return styles.estadoPendiente;
             case 'Evento sin Revisión':
                 return styles.estadoSinRevision;
+            case 'Bloqueado en Revisión':
+                    return styles.estadoBloqueadoEnRevision;
+            case 'Rechazado':
+                    return styles.estadoRechazado;
+            case 'Confirmado':
+                    return styles.estadoConfirmado;
+            case 'Derivado a experto':
+                    return styles.estadoDerivadoAExperto;
             default:
                 return '';
         }
@@ -47,14 +57,14 @@ const GestionSismos = () => {
                 clearInterval(intervalId);
             }
         };
-    }, [sismoSeleccionado, estadoActual]);
+    }, [sismoSeleccionado]);
 
     // Simulación de carga de datos desde el backend
-    //llama a GestorRevision.buscarSismos() para cargar los sismos
+    //llama a GestorRevision.buscarEventoAutodetectado() para cargar los sismos
     useEffect(() => {
         const cargarSismos = async () => {
         try {
-            const sismosCargados = await GestorRevision.buscarSismos();
+            const sismosCargados = await GestorRevision.buscarEventoAutodetectado();
             setSismos(sismosCargados);
         } catch (error) {
             // Manejar el error (mostrar mensaje, etc.)
@@ -72,32 +82,45 @@ const GestionSismos = () => {
         setModoRevision(false); // Cerrar revisión al seleccionar otro sismo
     };
 
-    // Llama a GestorRevision.tomarDatosRevision()
+    // Llama a GestorRevision.tomarDatosSeleccion()
     const handleIniciarRevision = () => {
-        const sismoParaRevision = GestorRevision.tomarDatosRevision(sismoSeleccionado);
-        setSismoSeleccionado(sismoParaRevision); // Actualizar si es necesario
+        const pudoBloquear = GestorRevision.buscarEstadoBloqueadoEnRevision(sismoSeleccionado);
+    if (pudoBloquear) {
+        setEstadoActual("Bloqueado en Revisión");
         setModoRevision(true);
+        setNotificacion("El evento ha sido bloqueado para los demas analistas");
+    } else {
+        alert("No se puede iniciar la revisión en el estado actual.");
+    }
     };
 
-    /*
-    const handleGuardarRevision = (resultadoRevision) => {
-        // Aquí iría la lógica para guardar la revisión en el backend
-        console.log('Resultado de la revisión:', resultadoRevision);
-        setModoRevision(false);
-        setSismoSeleccionado(null); // Opcional: limpiar el sismo seleccionado
-    };
-    */
 
     //Llama a GestorRevision.registrarResultadoRevision() y maneja la respuesta (éxito o error). Recarga la lista de sismos después de guardar la revisión.
     const handleRegistrarResultado = async (revision) => {
         try {
         const resultado = await GestorRevision.registrarResultadoRevision(revision);
         console.log(resultado.message); // Mostrar mensaje de éxito
+
+
+        if (revision.resultado === 'rechazado' && sismoSeleccionado) {
+            sismoSeleccionado.rechazarEvento();
+            const ahora = new Date();
+            sismoSeleccionado.setFechaHoraRechazo(ahora);
+            sismoSeleccionado.user = user.user || user;
+        } else if (revision.resultado === 'aprobado') {
+            sismoSeleccionado.confirmarEvento();
+            const ahora = new Date();
+            sismoSeleccionado.setFechaHoraConfirmacion?.(ahora); 
+            sismoSeleccionado.user = user.user || user; 
+        }
+
+
         setModoRevision(false);
-        setSismoSeleccionado(null);
+        setSismoSeleccionado(sismoSeleccionado);
         // Recargar la lista de sismos para reflejar los cambios
-        const sismosActualizados = await GestorRevision.buscarSismos();
+        const sismosActualizados = await GestorRevision.buscarEventoAutodetectado();
         setSismos(sismosActualizados);
+        
         } catch (error) {
         // Manejar el error (mostrar mensaje, etc.)
         console.error("Error al registrar revisión:", error);
@@ -110,33 +133,80 @@ const GestionSismos = () => {
         setModoRevision(false);
     };
 
+
+    const handleVisualizarMapa = () => {
+        // Por ahora podés poner un alert o un console.log
+        alert('Mostrar mapa con ubicación del sismo seleccionado');
+    };
+
+    const handleModificarDatos = () => {
+        alert("Aquí iría la lógica para abrir el formulario de modificación de datos.");
+    };
+    
+
+    const handleDerivarASupervisor = async (supervisor) => {
+        if (!sismoSeleccionado) return;
+    
+        sismoSeleccionado.derivarAExperto(supervisor);
+    
+        // Actualizamos la UI:
+        setEstadoActual(Estado.DERIVADO_A_EXPERTO.getNombre());
+        setModoRevision(false);
+        setNotificacion(`Evento derivado a supervisor ${supervisor}`);
+        setSismoSeleccionado(sismoSeleccionado);
+        setSismoSeleccionado(null);
+        
+    
+        // Recargamos la lista de sismos para reflejar cambios
+        const sismosActualizados = await GestorRevision.buscarEventoAutodetectado();
+        setSismos(sismosActualizados);
+    };
+
+
+
+
     return (
         <div className={styles.gestionSismosContainer}>
+        {!modoRevision && (
             <div className={styles.listaSismosContainer}>
-                <ListaSismos sismos={sismos} onSeleccionarSismo={handleSeleccionarSismo} />
+                <ListaSismos sismos={sismos} onSeleccionarSismo={handleSeleccionarSismo} modoRevision={modoRevision}
+                onVisualizarMapa={handleVisualizarMapa} onModificarDatos={handleModificarDatos}
+                />
             </div>
-            {sismoSeleccionado && ( // Mostrar solo si hay un sismo seleccionado
-                <div className={styles.detalleSismoContainer}>
-                    <div className={`${styles.estadoContainer} ${getEstadoClass(estadoActual)}`}>
-                        <h3>Estado actual: {estadoActual}</h3>
-                    </div>
-                    {!modoRevision ? (
-                        <DetalleSismo 
-                            sismo={sismoSeleccionado} 
-                            onIniciarRevision={handleIniciarRevision}
-                            botonDeshabilitado={estadoActual === 'Evento sin Revisión'}
-                            estiloBoton={estadoActual === 'Evento sin Revisión' ? styles.botonDeshabilitado : ''}
-                        />
-                    ) : (
-                        <FormularioRevision
-                            sismo={sismoSeleccionado}
-                            onGuardarRevision={handleRegistrarResultado}
-                            onCancelarRevision={handleCancelarRevision}
-                        />
-                    )}
+        )}
+        {sismoSeleccionado && (
+            <div className={styles.detalleSismoContainer} style={modoRevision ? { width: '100%' } : {}}>
+                <div className={`${styles.estadoContainer} ${getEstadoClass(estadoActual)}`}>
+                    <h3>Estado actual: {estadoActual}</h3>
                 </div>
-            )}
-        </div>
+                {!modoRevision ? (
+                    <DetalleSismo 
+                        sismo={sismoSeleccionado} 
+                        onIniciarRevision={handleIniciarRevision}
+                        botonDeshabilitado={estadoActual === 'Evento sin Revisión' || estadoActual === 'Rechazado' ||estadoActual==='Confirmado'}
+                        estiloBoton={(estadoActual === 'Evento sin Revisión'||estadoActual === 'Rechazado') || estadoActual==='Confirmado'? styles.botonDeshabilitado : ''}
+                        user={user}
+                        estadoActual={estadoActual}
+                    />
+                ) : (
+                    <FormularioRevision
+                        sismo={sismoSeleccionado}
+                        onGuardarRevision={handleRegistrarResultado}
+                        onCancelarRevision={handleCancelarRevision}
+                        onDerivar={handleDerivarASupervisor}
+                    />
+                )}
+
+                {notificacion && (
+                        <Notificacion 
+                            message={notificacion} 
+                            onClose={() => setNotificacion(null)} 
+                             duration={4000} // dura 4 segundos
+                        />
+                )}
+            </div>
+        )}
+    </div>
     );
 };
 

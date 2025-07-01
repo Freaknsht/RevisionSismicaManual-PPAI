@@ -47,6 +47,10 @@ class Estado {
     esBloqueadoEnRevision() {
         return this === Estado.BLOQUEADO_EN_REVISION;
     }
+
+    esRecahazado(){
+        return this === Estado.RECHAZADO;
+    }
     esDerivadoAExperto() {
         return this === Estado.DERIVADO_A_EXPERTO;
     }

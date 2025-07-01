@@ -26,6 +26,8 @@ const origenNatural = new OrigenDeGeneracion("Natural");
 const origenTectonico = new OrigenDeGeneracion("Tectónico");
 const origenVolcanico = new OrigenDeGeneracion("Volcánico");
 
+
+
 // Simulamos una base de datos de sismos
 const sismosMock = [
     new EventoSismico(
@@ -96,3 +98,10 @@ export const guardarRevisionSismo = async (revision) => {
         }, 500);
     });
 };
+
+const ordenarEventoSismico = (listaEventos) => {                                //ordena eventos segun fecha y hora
+    return listaEventos.sort((a, b) => b.getFechaHora() - a.getFechaHora());
+};
+
+
+

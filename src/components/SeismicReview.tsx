@@ -25,7 +25,7 @@ import { useToast } from '@/hooks/use-toast';
 interface SeismicReviewProps {
   earthquake: Earthquake;
   onClose: () => void;
-  onComplete: (action: 'accept' | 'cancel' | 'refer', notes: string, assessment: string) => void;
+  onComplete: (action: 'accept' | 'cancel' | 'refer'| 'reject', notes: string, assessment: string) => void;
 }
 
 const SeismicReview: React.FC<SeismicReviewProps> = ({ 
@@ -38,7 +38,7 @@ const SeismicReview: React.FC<SeismicReviewProps> = ({
   const [mapboxToken, setMapboxToken] = useState('');
   const { toast } = useToast();
 
-  const handleComplete = (action: 'accept' | 'cancel' | 'refer') => {
+  const handleComplete = (action: 'accept' | 'cancel' | 'refer'|'reject') => {
     if (!notes.trim()) {
       toast({
         title: "Notas requeridas",
@@ -53,7 +53,8 @@ const SeismicReview: React.FC<SeismicReviewProps> = ({
     const actionTexts = {
       accept: 'aceptado',
       cancel: 'cancelado', 
-      refer: 'derivado a experto'
+      refer: 'derivado a experto',
+      reject: 'rechazado'
     };
 
     toast({
@@ -259,6 +260,15 @@ const SeismicReview: React.FC<SeismicReviewProps> = ({
             >
               <UserX className="w-4 h-4" />
               Derivar a Experto
+            </Button>
+
+             <Button 
+              variant="outline" 
+              onClick={() => handleComplete('reject')}
+              className="flex items-center gap-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+            >
+              <XCircle className="w-4 h-4" />
+              Rechazar Evento
             </Button>
             
             <Button 

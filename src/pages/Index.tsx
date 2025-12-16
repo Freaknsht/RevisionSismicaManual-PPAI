@@ -225,98 +225,68 @@ const Index = () => {
    * Body: { accion: 'confirmar'|'rechazar'|'derivar', notas: string, evaluacion: string }
    * Response: { success: true, evento: {...} }
    */
-  const handleCompleteReview = async (action: 'accept' | 'cancel' | 'refer', notes: string, assessment: string) => {
-    if (!selectedEarthquake) return;
+  const handleCompleteReview = async (
+  action: 'accept' | 'cancel' | 'refer' | 'reject',
+  notes: string,
+  assessment: string
+) => {
+  if (!selectedEarthquake) return;
 
-    // Determinar el nuevo estado según la acción
-    let newStatus: 'pending' | 'in_review' | 'completed' | 'referred';
-    let actionName = '';
-    
-    if (action === 'accept') {
-      // Flujo A6: Confirmar evento
-      newStatus = 'completed';
-      actionName = 'confirmar';
-    } else if (action === 'refer') {
-      // Flujo A7: Derivar a experto
-      newStatus = 'referred';
-      actionName = 'derivar';
-    } else {
-      // Flujo A8: Cancelar revisión
-      newStatus = 'pending';
-      actionName = 'cancelar';
-    }
+  let newStatus:
+    | 'pending'
+    | 'in_review'
+    | 'completed'
+    | 'referred'
+    | 'rejected';
+  let actionName = '';
 
-    // TODO BACKEND: Descomentar cuando el backend esté disponible
-    /*
-    try {
-      const token = localStorage.getItem('token');
-      const userStr = localStorage.getItem('user');
-      const user = userStr ? JSON.parse(userStr) : null;
+  if (action === 'accept') {
+    newStatus = 'completed';
+    actionName = 'confirmar';
+  } else if (action === 'refer') {
+    newStatus = 'referred';
+    actionName = 'derivar';
+  } else if (action === 'reject') {
+    newStatus = 'rejected';
+    actionName = 'rechazar';
+  } else {
+    newStatus = 'pending';
+    actionName = 'cancelar';
+  }
 
-      const response = await fetch(`http://localhost:3000/api/sismos/${selectedEarthquake.id}/completar-revision`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          accion: actionName,
-          notas: notes,
-          evaluacion: assessment,
-          analista_id: user?.id,
-          fecha_revision: new Date().toISOString()
-        })
-      });
+  // Simulación temporal (sin backend)
+  const userStr = localStorage.getItem('user');
+  const user = userStr ? JSON.parse(userStr) : { nombre: 'Usuario Actual' };
 
-      if (!response.ok) {
-        throw new Error('Error al completar la revisión');
-      }
-
-      const data = await response.json();
-      
-      // Actualizar estado local con los datos del servidor
-      setEarthquakes(prev => prev.map(eq => 
-        eq.id === selectedEarthquake.id ? data.evento : eq
-      ));
-
-      toast({
-        title: "Revisión completada",
-        description: `El evento ha sido ${actionName === 'confirmar' ? 'confirmado' : actionName === 'derivar' ? 'derivado a experto' : 'rechazado'}`,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "No se pudo completar la revisión",
-        variant: "destructive",
-      });
-      return;
-    }
-    */
-
-    // Simulación temporal
-    const userStr = localStorage.getItem('user');
-    const user = userStr ? JSON.parse(userStr) : { nombre: 'Usuario Actual' };
-
-    setEarthquakes(prev => prev.map(eq => 
-      eq.id === selectedEarthquake.id 
-        ? { 
-            ...eq, 
+  setEarthquakes((prev) =>
+    prev.map((eq) =>
+      eq.id === selectedEarthquake.id
+        ? {
+            ...eq,
             status: newStatus,
-            notes: notes,
-            reviewedBy: action === 'cancel' ? undefined : user.nombre
+            notes,
+            reviewedBy:
+              action === 'cancel' ? undefined : user.nombre,
           }
         : eq
-    ));
+    )
+  );
 
-    toast({
-      title: "Revisión completada",
-      description: `El evento ha sido ${action === 'accept' ? 'confirmado' : action === 'refer' ? 'derivado a experto' : 'rechazado'}`,
-    });
+  toast({
+    title: "Revisión completada",
+    description:
+      action === 'accept'
+        ? 'El evento ha sido confirmado'
+        : action === 'refer'
+        ? 'El evento ha sido derivado a experto'
+        : action === 'reject'
+        ? 'El evento ha sido rechazado'
+        : 'La revisión fue cancelada',
+  });
 
-    setShowReview(false);
-    setSelectedEarthquake(null);
-  };
-
+  setShowReview(false);
+  setSelectedEarthquake(null);
+};
   /**
    * Cierra los modales de detalles y revisión
    */

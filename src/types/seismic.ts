@@ -6,7 +6,7 @@ export interface Earthquake {
   depth: number;
   timestamp: string;
   region: string;
-  status: 'pending' | 'in_review' | 'completed' | 'referred';
+  status: 'pending' | 'in_review' | 'completed' | 'referred' |'rejected';
   reviewedBy?: string;
   notes?: string;
 }

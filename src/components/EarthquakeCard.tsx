@@ -21,23 +21,30 @@ const EarthquakeCard: React.FC<EarthquakeCardProps> = ({ earthquake, onClick }) 
     return 'bg-secondary text-secondary-foreground';
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string | undefined) => {
     switch (status) {
-      case 'pending': return 'bg-warning/20 text-warning-foreground border-warning/30';
+      case 'pending_review': 
+      case 'auto_detected':
+      case 'auto_confirmed':
+        return 'bg-warning/20 text-warning-foreground border-warning/30';
       case 'in_review': return 'bg-primary/20 text-primary-foreground border-primary/30';
       case 'completed': return 'bg-success/20 text-success-foreground border-success/30';
-      case 'referred': return 'bg-destructive/20 text-destructive-foreground border-destructive/30';
+      case 'rejected': return 'bg-destructive/20 text-destructive-foreground border-destructive/30';
+      case 'escalated': return 'bg-blue/20 text-blue-foreground border-blue/30';
       default: return 'bg-secondary text-secondary-foreground';
     }
   };
 
-  const getStatusText = (status: string) => {
+  const getStatusText = (status: string | undefined) => {
     switch (status) {
-      case 'pending': return 'Pendiente';
+      case 'pending_review': return 'Pendiente de Revisión';
+      case 'auto_detected': return 'Autodetectado';
+      case 'auto_confirmed': return 'Autoconfirmado';
       case 'in_review': return 'En Revisión';
-      case 'completed': return 'Completado';
-      case 'referred': return 'Derivado';
-      default: return status;
+      case 'completed': return 'Confirmado';
+      case 'rejected': return 'Rechazado';
+      case 'escalated': return 'Derivado';
+      default: return status || 'Desconocido';
     }
   };
 
@@ -58,13 +65,13 @@ const EarthquakeCard: React.FC<EarthquakeCardProps> = ({ earthquake, onClick }) 
           <div className="flex items-center gap-3">
             <div className={cn(
               "flex items-center justify-center w-12 h-12 rounded-full font-bold text-lg",
-              getMagnitudeColor(earthquake.magnitude),
-              earthquake.magnitude >= 7 && "animate-seismic-pulse"
+              getMagnitudeColor(earthquake.magnitud),
+              earthquake.magnitud >= 7 && "animate-seismic-pulse"
             )}>
-              {earthquake.magnitude}
+              {earthquake.magnitud}
             </div>
             <div>
-              <h3 className="font-semibold text-lg">{earthquake.location}</h3>
+              <h3 className="font-semibold text-lg">{earthquake.ubicacion}</h3>
               <p className="text-sm text-muted-foreground">{earthquake.region}</p>
             </div>
           </div>
@@ -79,24 +86,24 @@ const EarthquakeCard: React.FC<EarthquakeCardProps> = ({ earthquake, onClick }) 
           <div className="flex items-center gap-2 text-sm">
             <Activity className="w-4 h-4 text-primary" />
             <span className="text-muted-foreground">Profundidad:</span>
-            <span className="font-medium">{earthquake.depth} km</span>
+            <span className="font-medium">{earthquake.profundidad} km</span>
           </div>
           
           <div className="flex items-center gap-2 text-sm">
             <MapPin className="w-4 h-4 text-primary" />
             <span className="text-muted-foreground">Coordenadas:</span>
             <span className="font-medium font-mono text-xs">
-              {earthquake.coordinates[1].toFixed(3)}, {earthquake.coordinates[0].toFixed(3)}
+              {earthquake.latitud.toFixed(3)}, {earthquake.longitud.toFixed(3)}
             </span>
           </div>
           
           <div className="flex items-center gap-2 text-sm">
             <Clock className="w-4 h-4 text-primary" />
-            <span className="font-medium">{formatDate(earthquake.timestamp)}</span>
+            <span className="font-medium">{formatDate(String(earthquake.fechaHora))}</span>
           </div>
         </div>
 
-        {earthquake.magnitude >= 6 && (
+        {earthquake.magnitud >= 6 && (
           <div className="flex items-center gap-2 p-3 bg-warning/10 border border-warning/30 rounded-lg">
             <AlertTriangle className="w-4 h-4 text-warning" />
             <span className="text-sm font-medium text-warning-foreground">

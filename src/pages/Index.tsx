@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Filter, Activity, AlertTriangle, TrendingUp, ArrowLeft, LogOut } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -9,70 +9,40 @@ import { Button } from '@/components/ui/button';
 import EarthquakeCard from '@/components/EarthquakeCard';
 import EarthquakeDetails from '@/components/EarthquakeDetails';
 import SeismicReview from '@/components/SeismicReview';
-import { earthquakesData } from '@/data/earthquakes';
-import { Earthquake } from '@/types/seismic';
+import { Earthquake, transformEarthquake } from '@/types/seismic';
 import { useToast } from '@/hooks/use-toast';
+
+// URL del backend - Usa proxy en desarrollo, URL absoluta en producción
+const BACKEND_URL = import.meta.env.MODE === 'development' 
+  ? '/api/sismos' 
+  : 'http://localhost:3001/api/sismos';
 
 /**
  * Página principal de revisión de eventos sísmicos
  * Implementa el Caso de Uso: Registro de resultado de revisión manual
- * 
- * Paso 6 del CU: El sistema busca todos los eventos sísmicos auto detectados 
- * que aún no han sido revisados, los ordena por fecha y hora de ocurrencia
- * y visualiza los datos principales de cada uno
  */
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  // Estado para los sismos cargados desde el backend
-  // Paso 6 del CU: Eventos sísmicos auto detectados pendientes de revisión
   const [earthquakes, setEarthquakes] = useState<Earthquake[]>([]);
   const [selectedEarthquake, setSelectedEarthquake] = useState<Earthquake | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('pending'); // Filtro por defecto: pendientes
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [magnitudeFilter, setMagnitudeFilter] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(true);
 
   /**
-   * Verifica autenticación y carga eventos sísmicos al montar el componente
-   * Paso 6 del CU: Buscar eventos sísmicos auto detectados que no han sido revisados
-   */
-  useEffect(() => {
-    // Verificar autenticación
-    const userStr = localStorage.getItem('user');
-    if (!userStr) {
-      navigate('/login');
-      return;
-    }
-
-    // Cargar eventos sísmicos desde el backend
-    loadEarthquakes();
-  }, [navigate]);
-
-  /**
    * Carga los eventos sísmicos desde el backend
-   * TODO: Implementar llamada al backend Node.js
-   * Endpoint: GET /api/sismos/pendientes
-   * Headers: { Authorization: Bearer <token> }
-   * Response: Array de eventos sísmicos con estado 'pending'
-   * 
-   * Paso 6 del CU: Busca todos los eventos sísmicos auto detectados que aún no han sido revisados
-   * y los ordena por fecha y hora de ocurrencia
    */
-  const loadEarthquakes = async () => {
+  const loadEarthquakes = useCallback(async () => {
     setIsLoading(true);
-    
-    // TODO BACKEND: Descomentar cuando el backend esté disponible
-    /*
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/sismos/pendientes', {
+      const response = await fetch(`${BACKEND_URL}/pendientes`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
@@ -82,17 +52,19 @@ const Index = () => {
       }
 
       const data = await response.json();
-      // Los datos deben venir ordenados por fecha y hora de ocurrencia (más recientes primero)
-      setEarthquakes(data);
       
-      // Flujo alternativo A1: No hay sismos auto detectados pendientes de revisión
-      if (data.length === 0) {
+      // Transformar eventos del backend
+      const transformedEarthquakes = (Array.isArray(data) ? data : data.data || []).map(transformEarthquake);
+      setEarthquakes(transformedEarthquakes);
+      
+      if (transformedEarthquakes.length === 0) {
         toast({
           title: "No hay eventos pendientes",
           description: "No se encontraron eventos sísmicos pendientes de revisión",
         });
       }
     } catch (error) {
+      console.error('Error loading earthquakes:', error);
       toast({
         title: "Error",
         description: "No se pudieron cargar los eventos sísmicos",
@@ -101,32 +73,30 @@ const Index = () => {
     } finally {
       setIsLoading(false);
     }
-    */
+  }, [toast]);
 
-    // Datos de ejemplo (eliminar cuando se implemente backend)
-    // Los datos están ordenados por fecha y hora (más recientes primero)
-    setTimeout(() => {
-      setEarthquakes(earthquakesData);
-      setIsLoading(false);
-    }, 500);
-  };
+  /**
+   * Carga los eventos al montar el componente
+   */
+  useEffect(() => {
+    loadEarthquakes();
+  }, [loadEarthquakes]);
 
   /**
    * Filtra los sismos según los criterios de búsqueda
-   * Permite al AS buscar eventos específicos entre todos los pendientes
    */
   const filteredEarthquakes = useMemo(() => {
     return earthquakes.filter(earthquake => {
-      const matchesSearch = earthquake.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      const matchesSearch = earthquake.ubicacion.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            earthquake.region.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesStatus = statusFilter === 'all' || earthquake.status === statusFilter;
       
       const matchesMagnitude = magnitudeFilter === 'all' || 
-        (magnitudeFilter === 'low' && earthquake.magnitude < 5) ||
-        (magnitudeFilter === 'medium' && earthquake.magnitude >= 5 && earthquake.magnitude < 6) ||
-        (magnitudeFilter === 'high' && earthquake.magnitude >= 6 && earthquake.magnitude < 7) ||
-        (magnitudeFilter === 'critical' && earthquake.magnitude >= 7);
+        (magnitudeFilter === 'low' && earthquake.magnitud < 5) ||
+        (magnitudeFilter === 'medium' && earthquake.magnitud >= 5 && earthquake.magnitud < 6) ||
+        (magnitudeFilter === 'high' && earthquake.magnitud >= 6 && earthquake.magnitud < 7) ||
+        (magnitudeFilter === 'critical' && earthquake.magnitud >= 7);
 
       return matchesSearch && matchesStatus && matchesMagnitude;
     });
@@ -137,16 +107,15 @@ const Index = () => {
    */
   const stats = useMemo(() => {
     const total = earthquakes.length;
-    const pending = earthquakes.filter(eq => eq.status === 'pending').length;
+    const pending = earthquakes.filter(eq => ['pending_review', 'auto_detected', 'auto_confirmed'].includes(eq.status as string)).length;
     const inReview = earthquakes.filter(eq => eq.status === 'in_review').length;
-    const highMagnitude = earthquakes.filter(eq => eq.magnitude >= 6).length;
+    const highMagnitude = earthquakes.filter(eq => eq.magnitud >= 6).length;
     
     return { total, pending, inReview, highMagnitude };
   }, [earthquakes]);
 
   /**
-   * Paso 7 del CU: El AS selecciona un evento sísmico
-   * Muestra los detalles del evento seleccionado
+   * Maneja la selección de un evento sísmico
    */
   const handleEarthquakeClick = (earthquake: Earthquake) => {
     setSelectedEarthquake(earthquake);
@@ -154,141 +123,135 @@ const Index = () => {
   };
 
   /**
-   * Paso 8 del CU: El sistema bloquea el evento seleccionado cambiando su estado a "bloqueado en revisión"
-   * Inicia el proceso de revisión manual del evento sísmico
-   * TODO: Implementar llamada al backend para bloquear el evento
-   * Endpoint: POST /api/sismos/:id/bloquear
-   * Response: { success: true, evento: {...} }
+   * Inicia la revisión del evento sísmico
    */
   const handleStartReview = async () => {
     if (!selectedEarthquake) return;
 
-    // TODO BACKEND: Descomentar cuando el backend esté disponible
-    /*
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/sismos/${selectedEarthquake.id}/bloquear`, {
+      const response = await fetch(`${BACKEND_URL}/${selectedEarthquake.id}/iniciar-revision`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
 
       if (!response.ok) {
-        throw new Error('No se pudo bloquear el evento');
+        throw new Error('No se pudo iniciar la revisión');
       }
 
-      const data = await response.json();
-      
-      // Actualizar el estado local
+      // Actualizar estado local
+      const updatedEarthquake = {
+        ...selectedEarthquake,
+        estado: {
+          ...selectedEarthquake.estado,
+          nombre: 'Bloqueado en Revisión'
+        },
+        status: 'in_review' as const
+      };
+
       setEarthquakes(prev => prev.map(eq => 
-        eq.id === selectedEarthquake.id 
-          ? { ...eq, status: 'in_review' as 'in_review', reviewedBy: data.evento.reviewedBy }
-          : eq
+        eq.id === selectedEarthquake.id ? updatedEarthquake : eq
       ));
       
+      setSelectedEarthquake(updatedEarthquake);
       setShowDetails(false);
       setShowReview(true);
+
+      toast({
+        title: "Revisión iniciada",
+        description: "El evento ha sido bloqueado para revisión",
+      });
     } catch (error) {
+      console.error('Error starting review:', error);
       toast({
         title: "Error",
         description: "No se pudo iniciar la revisión del evento",
         variant: "destructive",
       });
     }
-    */
-
-    // Simulación temporal
-    const userStr = localStorage.getItem('user');
-    const user = userStr ? JSON.parse(userStr) : { nombre: 'Usuario Actual' };
-    
-    setEarthquakes(prev => prev.map(eq => 
-      eq.id === selectedEarthquake.id 
-        ? { ...eq, status: 'in_review' as 'in_review', reviewedBy: user.nombre }
-        : eq
-    ));
-    setShowDetails(false);
-    setShowReview(true);
   };
 
   /**
-   * Paso 14-17 del CU: Completar la revisión del evento sísmico
-   * Opciones:
-   * - Confirmar evento (Paso 16, Flujo A6): Actualiza estado a 'confirmado'
-   * - Rechazar evento (Paso 15): Actualiza estado a 'rechazado'
-   * - Derivar a experto (Flujo A7): Actualiza estado a 'derivado a experto'
-   * - Cancelar (Flujo A8): Vuelve el evento a estado 'pending'
-   * 
-   * TODO: Implementar llamada al backend
-   * Endpoint: POST /api/sismos/:id/completar-revision
-   * Body: { accion: 'confirmar'|'rechazar'|'derivar', notas: string, evaluacion: string }
-   * Response: { success: true, evento: {...} }
+   * Completa la revisión del evento sísmico
    */
   const handleCompleteReview = async (
-  action: 'accept' | 'cancel' | 'refer' | 'reject',
-  notes: string,
-  assessment: string
-) => {
-  if (!selectedEarthquake) return;
+    action: 'accept' | 'cancel' | 'refer' | 'reject',
+    notes: string,
+    assessment: string
+  ) => {
+    if (!selectedEarthquake) return;
 
-  let newStatus:
-    | 'pending'
-    | 'in_review'
-    | 'completed'
-    | 'referred'
-    | 'rejected';
-  let actionName = '';
+    try {
+      let endpoint = '';
 
-  if (action === 'accept') {
-    newStatus = 'completed';
-    actionName = 'confirmar';
-  } else if (action === 'refer') {
-    newStatus = 'referred';
-    actionName = 'derivar';
-  } else if (action === 'reject') {
-    newStatus = 'rejected';
-    actionName = 'rechazar';
-  } else {
-    newStatus = 'pending';
-    actionName = 'cancelar';
-  }
+      switch(action) {
+        case 'accept':
+          endpoint = `${BACKEND_URL}/${selectedEarthquake.id}/confirmar`;
+          break;
+        case 'reject':
+          endpoint = `${BACKEND_URL}/${selectedEarthquake.id}/rechazar`;
+          break;
+        case 'refer':
+          endpoint = `${BACKEND_URL}/${selectedEarthquake.id}/derivar`;
+          break;
+        case 'cancel':
+          // Simplemente cerrar sin hacer cambios
+          closeModals();
+          toast({
+            title: "Revisión cancelada",
+            description: "La revisión ha sido cancelada",
+          });
+          return;
+      }
 
-  // Simulación temporal (sin backend)
-  const userStr = localStorage.getItem('user');
-  const user = userStr ? JSON.parse(userStr) : { nombre: 'Usuario Actual' };
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          observaciones: notes,
+          evaluacion: assessment
+        })
+      });
 
-  setEarthquakes((prev) =>
-    prev.map((eq) =>
-      eq.id === selectedEarthquake.id
-        ? {
-            ...eq,
-            status: newStatus,
-            notes,
-            reviewedBy:
-              action === 'cancel' ? undefined : user.nombre,
-          }
-        : eq
-    )
-  );
+      if (!response.ok) {
+        throw new Error(`Error en la acción: ${action}`);
+      }
 
-  toast({
-    title: "Revisión completada",
-    description:
-      action === 'accept'
-        ? 'El evento ha sido confirmado'
-        : action === 'refer'
-        ? 'El evento ha sido derivado a experto'
-        : action === 'reject'
-        ? 'El evento ha sido rechazado'
-        : 'La revisión fue cancelada',
-  });
+      const result = await response.json();
+      const updatedEvento = result.evento || result;
 
-  setShowReview(false);
-  setSelectedEarthquake(null);
-};
+      // Transformar y actualizar
+      const transformedEvento = transformEarthquake(updatedEvento);
+      
+      setEarthquakes(prev => prev.map(eq => 
+        eq.id === selectedEarthquake.id ? transformedEvento : eq
+      ));
+
+      toast({
+        title: "Revisión completada",
+        description: action === 'accept'
+          ? 'El evento ha sido confirmado'
+          : action === 'refer'
+          ? 'El evento ha sido derivado a superior'
+          : 'El evento ha sido rechazado',
+      });
+
+      closeModals();
+    } catch (error) {
+      console.error('Error completing review:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo completar la acción",
+        variant: "destructive",
+      });
+    }
+  };
+
   /**
-   * Cierra los modales de detalles y revisión
+   * Cierra los modales
    */
   const closeModals = () => {
     setShowDetails(false);
@@ -305,7 +268,7 @@ const Index = () => {
   };
 
   /**
-   * Volver al dashboard
+   * Vuelve al dashboard
    */
   const handleBackToDashboard = () => {
     navigate('/dashboard');
@@ -412,10 +375,13 @@ const Index = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todos los estados</SelectItem>
-                    <SelectItem value="pending">Pendiente</SelectItem>
+                    <SelectItem value="pending_review">Pendiente de Revisión</SelectItem>
+                    <SelectItem value="auto_detected">Autodetectado</SelectItem>
+                    <SelectItem value="auto_confirmed">Autoconfirmado</SelectItem>
                     <SelectItem value="in_review">En Revisión</SelectItem>
-                    <SelectItem value="completed">Completado</SelectItem>
-                    <SelectItem value="referred">Derivado</SelectItem>
+                    <SelectItem value="completed">Confirmado</SelectItem>
+                    <SelectItem value="rejected">Rechazado</SelectItem>
+                    <SelectItem value="escalated">Derivado</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -450,7 +416,13 @@ const Index = () => {
             </h2>
           </div>
 
-          {filteredEarthquakes.length === 0 ? (
+          {isLoading ? (
+            <Card className="shadow-card">
+              <CardContent className="text-center py-12">
+                <p className="text-muted-foreground">Cargando eventos sísmicos...</p>
+              </CardContent>
+            </Card>
+          ) : filteredEarthquakes.length === 0 ? (
             <Card className="shadow-card">
               <CardContent className="text-center py-12">
                 <AlertTriangle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />

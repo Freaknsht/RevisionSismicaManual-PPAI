@@ -35,12 +35,12 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   /**
-   * Carga los eventos sísmicos desde el backend
+   * Carga todos los eventos sísmicos desde el backend
    */
   const loadEarthquakes = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${BACKEND_URL}/pendientes`, {
+      const response = await fetch(BACKEND_URL, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -59,8 +59,8 @@ const Index = () => {
       
       if (transformedEarthquakes.length === 0) {
         toast({
-          title: "No hay eventos pendientes",
-          description: "No se encontraron eventos sísmicos pendientes de revisión",
+          title: "No hay eventos sísmicos",
+          description: "No se encontraron eventos sísmicos en la base de datos",
         });
       }
     } catch (error) {
@@ -293,7 +293,7 @@ const Index = () => {
             Registro de Revisión Manual
           </h1>
           <p className="text-xl text-muted-foreground">
-            Eventos sísmicos pendientes de revisión
+            Gestión de eventos sísmicos - Filtra por estado o magnitud
           </p>
         </div>
 
